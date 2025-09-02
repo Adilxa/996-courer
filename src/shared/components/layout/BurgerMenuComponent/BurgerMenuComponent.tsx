@@ -1,6 +1,7 @@
 import { CustomIconComponent } from "@/shared/assets/icons/settings/CustomIconComponent";
 import { LanguageSwitcher } from "@/shared/components/ui/LanguageSwitcher/LanguageSwitcher";
 import { ThemeSwitcher } from "@/shared/components/ui/ThemeSwitcher/ThemeSwitcher";
+import { useTheme } from "@/shared/configs/context/ThemeContext";
 import { storage } from "@/shared/util/storage";
 import { router } from "expo-router";
 import React from "react";
@@ -26,9 +27,9 @@ export const BurgerMenuComponent: React.FC<BurgerMenuComponentProps> = ({
   style,
 }) => {
   const { t } = useTranslation();
+  const { colors, isDark } = useTheme();
 
   if (!isVisible) return null;
-
 
   const onLogout = async () => {
     await storage.remove('user');
@@ -36,12 +37,11 @@ export const BurgerMenuComponent: React.FC<BurgerMenuComponentProps> = ({
     router.push('/(auth)');
   }
 
-
   return (
-    <View style={[styles.menuOverlay, style]}>
+    <View style={[styles.menuOverlay, { backgroundColor: colors.background.primary }, style]}>
       {/* Close Button */}
       <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-        <CustomIconComponent name="close" size={24} color="#000000" />
+        <CustomIconComponent name="close" size={24} color={colors.text.primary} />
       </TouchableOpacity>
 
       <ScrollView
@@ -49,7 +49,7 @@ export const BurgerMenuComponent: React.FC<BurgerMenuComponentProps> = ({
         showsVerticalScrollIndicator={false}
       >
         {/* Top Section with Theme and Language */}
-        <View style={styles.topSection}>
+        <View style={[styles.topSection, { borderBottomColor: colors.border.light }]}>
           <View style={styles.themeLanguageRow}>
             <ThemeSwitcher />
             <LanguageSwitcher />
@@ -57,19 +57,19 @@ export const BurgerMenuComponent: React.FC<BurgerMenuComponentProps> = ({
         </View>
 
         {/* Location and Support */}
-        <View style={styles.infoSection}>
-          <TouchableOpacity style={styles.locationItem}>
-            <CustomIconComponent name="location" size={20} color="#6b7280" />
-            <Text style={styles.locationText}>{t("menu:location")}</Text>
+        <View style={[styles.infoSection, { borderBottomColor: colors.border.light }]}>
+          <TouchableOpacity style={[styles.locationItem, { backgroundColor: colors.background.secondary }]}>
+            <CustomIconComponent name="location" size={20} color={colors.text.secondary} />
+            <Text style={[styles.locationText, { color: colors.text.primary }]}>{t("menu:location")}</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.supportItem}>
-            <CustomIconComponent name="phone" size={20} color="#6b7280" />
-            <Text style={styles.supportText}>{t("menu:support")}</Text>
+          <TouchableOpacity style={[styles.supportItem, { backgroundColor: colors.background.secondary }]}>
+            <CustomIconComponent name="phone" size={20} color={colors.text.secondary} />
+            <Text style={[styles.supportText, { color: colors.text.primary }]}>{t("menu:support")}</Text>
           </TouchableOpacity>
         </View>
 
         {/* Start Selling Button */}
-        <TouchableOpacity style={styles.startSellingButton}>
+        <TouchableOpacity style={[styles.startSellingButton, { backgroundColor: colors.primary[500] }]}>
           <Text style={styles.startSellingText}>{t("menu:startSelling")}</Text>
         </TouchableOpacity>
 
@@ -77,86 +77,86 @@ export const BurgerMenuComponent: React.FC<BurgerMenuComponentProps> = ({
         <View style={styles.menuSections}>
           {/* About Company Section */}
           <View style={styles.menuSection}>
-            <Text style={styles.sectionTitle}>{t("menu:about")}</Text>
-            <TouchableOpacity style={styles.menuItem}>
-              <Text style={styles.menuItemText}>{t("menu:contacts")}</Text>
+            <Text style={[styles.sectionTitle, { color: colors.text.primary }]}>{t("menu:about")}</Text>
+            <TouchableOpacity style={[styles.menuItem, { borderBottomColor: colors.border.light }]}>
+              <Text style={[styles.menuItemText, { color: colors.text.primary }]}>{t("menu:contacts")}</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.menuItem}>
-              <Text style={styles.menuItemText}>{t("menu:requisites")}</Text>
+            <TouchableOpacity style={[styles.menuItem, { borderBottomColor: colors.border.light }]}>
+              <Text style={[styles.menuItemText, { color: colors.text.primary }]}>{t("menu:requisites")}</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.menuItem}>
-              <Text style={styles.menuItemText}>{t("menu:vacancies")}</Text>
+            <TouchableOpacity style={[styles.menuItem, { borderBottomColor: colors.border.light }]}>
+              <Text style={[styles.menuItemText, { color: colors.text.primary }]}>{t("menu:vacancies")}</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.menuItem}>
-              <Text style={styles.menuItemText}>{t("menu:cooperation")}</Text>
+            <TouchableOpacity style={[styles.menuItem, { borderBottomColor: colors.border.light }]}>
+              <Text style={[styles.menuItemText, { color: colors.text.primary }]}>{t("menu:cooperation")}</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.menuItem}>
-              <Text style={styles.menuItemText}>{t("menu:rightsForm")}</Text>
+            <TouchableOpacity style={[styles.menuItem, { borderBottomColor: colors.border.light }]}>
+              <Text style={[styles.menuItemText, { color: colors.text.primary }]}>{t("menu:rightsForm")}</Text>
             </TouchableOpacity>
           </View>
 
           {/* For Buyers Section */}
           <View style={styles.menuSection}>
-            <Text style={styles.sectionTitle}>{t("menu:forBuyers")}</Text>
-            <TouchableOpacity style={styles.menuItem}>
-              <Text style={styles.menuItemText}>{t("menu:help")}</Text>
+            <Text style={[styles.sectionTitle, { color: colors.text.primary }]}>{t("menu:forBuyers")}</Text>
+            <TouchableOpacity style={[styles.menuItem, { borderBottomColor: colors.border.light }]}>
+              <Text style={[styles.menuItemText, { color: colors.text.primary }]}>{t("menu:help")}</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.menuItem}>
-              <Text style={styles.menuItemText}>{t("menu:promoCodes")}</Text>
+            <TouchableOpacity style={[styles.menuItem, { borderBottomColor: colors.border.light }]}>
+              <Text style={[styles.menuItemText, { color: colors.text.primary }]}>{t("menu:promoCodes")}</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.menuItem}>
-              <Text style={styles.menuItemText}>{t("menu:catalog")}</Text>
+            <TouchableOpacity style={[styles.menuItem, { borderBottomColor: colors.border.light }]}>
+              <Text style={[styles.menuItemText, { color: colors.text.primary }]}>{t("menu:catalog")}</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.menuItem}>
-              <Text style={styles.menuItemText}>{t("menu:magazine")}</Text>
+            <TouchableOpacity style={[styles.menuItem, { borderBottomColor: colors.border.light }]}>
+              <Text style={[styles.menuItemText, { color: colors.text.primary }]}>{t("menu:magazine")}</Text>
             </TouchableOpacity>
           </View>
 
           {/* For Business Section */}
           <View style={styles.menuSection}>
-            <Text style={styles.sectionTitle}>{t("menu:forBusiness")}</Text>
-            <TouchableOpacity style={styles.menuItem}>
-              <Text style={styles.menuItemText}>{t("menu:payment")}</Text>
+            <Text style={[styles.sectionTitle, { color: colors.text.primary }]}>{t("menu:forBusiness")}</Text>
+            <TouchableOpacity style={[styles.menuItem, { borderBottomColor: colors.border.light }]}>
+              <Text style={[styles.menuItemText, { color: colors.text.primary }]}>{t("menu:payment")}</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.menuItem}>
-              <Text style={styles.menuItemText}>{t("menu:return")}</Text>
+            <TouchableOpacity style={[styles.menuItem, { borderBottomColor: colors.border.light }]}>
+              <Text style={[styles.menuItemText, { color: colors.text.primary }]}>{t("menu:return")}</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.menuItem}>
-              <Text style={styles.menuItemText}>{t("menu:security")}</Text>
+            <TouchableOpacity style={[styles.menuItem, { borderBottomColor: colors.border.light }]}>
+              <Text style={[styles.menuItemText, { color: colors.text.primary }]}>{t("menu:security")}</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.menuItem}>
-              <Text style={styles.menuItemText}>{t("menu:promotions")}</Text>
+            <TouchableOpacity style={[styles.menuItem, { borderBottomColor: colors.border.light }]}>
+              <Text style={[styles.menuItemText, { color: colors.text.primary }]}>{t("menu:promotions")}</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.menuItem}>
-              <Text style={styles.menuItemText}>{t("menu:becomeSeller")}</Text>
+            <TouchableOpacity style={[styles.menuItem, { borderBottomColor: colors.border.light }]}>
+              <Text style={[styles.menuItemText, { color: colors.text.primary }]}>{t("menu:becomeSeller")}</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.menuItem}>
-              <Text style={styles.menuItemText}>{t("menu:saleTerms")}</Text>
+            <TouchableOpacity style={[styles.menuItem, { borderBottomColor: colors.border.light }]}>
+              <Text style={[styles.menuItemText, { color: colors.text.primary }]}>{t("menu:saleTerms")}</Text>
             </TouchableOpacity>
           </View>
 
           {/* Legal Information Section */}
           <View style={styles.menuSection}>
-            <Text style={styles.sectionTitle}>{t("menu:legal")}</Text>
-            <TouchableOpacity style={styles.menuItem}>
-              <Text style={styles.menuItemText}>{t("menu:knowledgeBase")}</Text>
+            <Text style={[styles.sectionTitle, { color: colors.text.primary }]}>{t("menu:legal")}</Text>
+            <TouchableOpacity style={[styles.menuItem, { borderBottomColor: colors.border.light }]}>
+              <Text style={[styles.menuItemText, { color: colors.text.primary }]}>{t("menu:knowledgeBase")}</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.menuItem}>
-              <Text style={styles.menuItemText}>{t("menu:dataConsent")}</Text>
+            <TouchableOpacity style={[styles.menuItem, { borderBottomColor: colors.border.light }]}>
+              <Text style={[styles.menuItemText, { color: colors.text.primary }]}>{t("menu:dataConsent")}</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.menuItem}>
-              <Text style={styles.menuItemText}>
+            <TouchableOpacity style={[styles.menuItem, { borderBottomColor: colors.border.light }]}>
+              <Text style={[styles.menuItemText, { color: colors.text.primary }]}>
                 {t("menu:supportRequest")}
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.menuItem}>
-              <Text style={styles.menuItemText}>{t("menu:ideas")}</Text>
+            <TouchableOpacity style={[styles.menuItem, { borderBottomColor: colors.border.light }]}>
+              <Text style={[styles.menuItemText, { color: colors.text.primary }]}>{t("menu:ideas")}</Text>
             </TouchableOpacity>
           </View>
 
           {/* Subscribe Section */}
           <View style={styles.menuSection}>
-            <Text style={styles.sectionTitle}>{t("menu:subscribe")}</Text>
+            <Text style={[styles.sectionTitle, { color: colors.text.primary }]}>{t("menu:subscribe")}</Text>
             <View style={styles.socialIcons}>
               <TouchableOpacity style={styles.socialIcon}>
                 <CustomIconComponent
@@ -202,21 +202,21 @@ export const BurgerMenuComponent: React.FC<BurgerMenuComponentProps> = ({
 
         {/* App Store Buttons */}
         <View style={styles.appStoreSection}>
-          <TouchableOpacity style={styles.appStoreButton}>
-            <Text style={styles.appStoreText}>Google Play</Text>
+          <TouchableOpacity style={[styles.appStoreButton, { backgroundColor: colors.background.secondary }]}>
+            <Text style={[styles.appStoreText, { color: colors.text.primary }]}>Google Play</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.appStoreButton}>
-            <Text style={styles.appStoreText}>App Store</Text>
+          <TouchableOpacity style={[styles.appStoreButton, { backgroundColor: colors.background.secondary }]}>
+            <Text style={[styles.appStoreText, { color: colors.text.primary }]}>App Store</Text>
           </TouchableOpacity>
         </View>
 
         {/* Exit Button */}
-        <TouchableOpacity style={styles.exitButton} onPress={onLogout}>
+        <TouchableOpacity style={[styles.exitButton, { backgroundColor: colors.error[500] }]} onPress={onLogout}>
           <Text style={styles.exitButtonText}>{t("common:logout")}</Text>
         </TouchableOpacity>
 
         {/* Copyright */}
-        <Text style={styles.copyright}>{t("menu:copyright")}</Text>
+        <Text style={[styles.copyright, { color: colors.text.tertiary }]}>{t("menu:copyright")}</Text>
       </ScrollView>
     </View>
   );
@@ -229,7 +229,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: "white",
     zIndex: 1000,
   },
   closeButton: {
@@ -246,9 +245,7 @@ const styles = StyleSheet.create({
   },
   topSection: {
     paddingVertical: 16,
-    paddingHorizontal: 20,
     borderBottomWidth: 1,
-    borderBottomColor: "#f3f4f6",
   },
   themeLanguageRow: {
     flexDirection: "row",
@@ -260,9 +257,7 @@ const styles = StyleSheet.create({
   },
   infoSection: {
     paddingVertical: 16,
-    paddingHorizontal: 20,
     borderBottomWidth: 1,
-    borderBottomColor: "#f3f4f6",
   },
   infoItem: {
     flexDirection: "row",
@@ -272,21 +267,18 @@ const styles = StyleSheet.create({
   infoText: {
     marginLeft: 12,
     fontSize: 16,
-    color: "#374151",
   },
   locationItem: {
     flexDirection: "row",
     alignItems: "center",
     paddingVertical: 12,
     paddingHorizontal: 16,
-    backgroundColor: "#f9fafb",
     borderRadius: 12,
     marginBottom: 12,
   },
   locationText: {
     marginLeft: 12,
     fontSize: 16,
-    color: "#374151",
     fontWeight: "500",
   },
   supportItem: {
@@ -294,13 +286,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 12,
     paddingHorizontal: 16,
-    backgroundColor: "#f9fafb",
     borderRadius: 12,
   },
   supportText: {
     marginLeft: 12,
     fontSize: 16,
-    color: "#374151",
     fontWeight: "500",
   },
   userSection: {
@@ -309,13 +299,11 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     paddingBottom: 20,
     borderBottomWidth: 1,
-    borderBottomColor: "#f3f4f6",
   },
   userAvatar: {
     width: 50,
     height: 50,
     borderRadius: 25,
-    backgroundColor: "#f3f4f6",
     justifyContent: "center",
     alignItems: "center",
     marginRight: 12,
@@ -326,15 +314,12 @@ const styles = StyleSheet.create({
   userName: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#111827",
     marginBottom: 2,
   },
   userEmail: {
     fontSize: 14,
-    color: "#6b7280",
   },
   loginButton: {
-    backgroundColor: "#6366f1",
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 8,
@@ -351,7 +336,6 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     paddingBottom: 20,
     borderBottomWidth: 1,
-    borderBottomColor: "#f3f4f6",
   },
   languageButtons: {
     flexDirection: "row",
@@ -360,7 +344,6 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: "#f9fafb",
     justifyContent: "center",
     alignItems: "center",
     marginRight: 8,
@@ -372,16 +355,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 6,
-    backgroundColor: "#f9fafb",
     marginLeft: 4,
   },
   languageButtonText: {
     fontSize: 14,
     fontWeight: "500",
-    color: "#374151",
   },
   activeLangButton: {
-    backgroundColor: "#6366f1",
   },
   activeLangText: {
     color: "white",
@@ -391,15 +371,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: "#f3f4f6",
   },
   menuItemText: {
     fontSize: 16,
-    color: "#374151",
     marginLeft: 12,
   },
   startSellingButton: {
-    backgroundColor: "#5353F9",
     paddingVertical: 16,
     borderRadius: 25,
     alignItems: "center",
@@ -412,7 +389,6 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   logoutButton: {
-    backgroundColor: "#ef4444",
     paddingVertical: 16,
     borderRadius: 12,
     alignItems: "center",
@@ -426,7 +402,6 @@ const styles = StyleSheet.create({
   copyright: {
     textAlign: "center",
     fontSize: 12,
-    color: "#9ca3af",
     marginBottom: 20,
   },
   menuSections: {
@@ -438,7 +413,6 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#111827",
     marginBottom: 12,
   },
   socialIcons: {
@@ -457,7 +431,6 @@ const styles = StyleSheet.create({
   },
   appStoreButton: {
     flex: 1,
-    backgroundColor: "#f3f4f6",
     paddingVertical: 12,
     paddingHorizontal: 16,
     borderRadius: 8,
@@ -467,10 +440,8 @@ const styles = StyleSheet.create({
   appStoreText: {
     fontSize: 14,
     fontWeight: "500",
-    color: "#374151",
   },
   exitButton: {
-    backgroundColor: "#ef4444",
     paddingVertical: 12,
     paddingHorizontal: 24,
     borderRadius: 8,

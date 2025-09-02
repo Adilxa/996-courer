@@ -22,22 +22,22 @@ export const SafeAreaScreenComponent: React.FC<
 > = ({
   children,
   style,
-  backgroundColor = "#ffffff",
+  backgroundColor,
   statusBarStyle = "dark-content",
   statusBarBackgroundColor,
   edges = ["top", "bottom", "left", "right"],
 }) => {
-  return (
-    <View style={[styles.container, { backgroundColor }]}>
-      <StatusBar
-        barStyle={statusBarStyle}
-        backgroundColor={statusBarBackgroundColor || backgroundColor}
-        translucent={Platform.OS === "android"}
-      />
-      <SafeAreaView style={[styles.content, style]}>{children}</SafeAreaView>
-    </View>
-  );
-};
+    return (
+      <View style={[styles.container, backgroundColor && { backgroundColor }]}>
+        <StatusBar
+          barStyle={statusBarStyle}
+          backgroundColor={statusBarBackgroundColor || backgroundColor}
+          translucent={Platform.OS === "android"}
+        />
+        <SafeAreaView style={[styles.content, style]}>{children}</SafeAreaView>
+      </View>
+    );
+  };
 
 const styles = StyleSheet.create({
   container: {

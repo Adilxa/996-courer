@@ -1,19 +1,22 @@
 import { CustomIconComponent } from "@/shared/assets/icons/settings/CustomIconComponent";
+import { useTheme } from "@/shared/configs/context/ThemeContext";
 import { Entypo, Feather, Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 import { View } from "react-native";
 
 export default function TabLayout() {
+  const { colors, isDark } = useTheme();
+
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: "#5353F9",
-        tabBarInactiveTintColor: "#9ca3af",
+        tabBarActiveTintColor: colors.primary[500],
+        tabBarInactiveTintColor: colors.text.secondary,
         tabBarStyle: {
-          backgroundColor: "white",
+          backgroundColor: colors.background.primary,
           borderTopWidth: 1,
-          borderTopColor: "#f3f4f6",
+          borderTopColor: colors.border.light,
           paddingBottom: 8,
           paddingTop: 8,
           height: 90,
@@ -58,7 +61,7 @@ export default function TabLayout() {
                 marginBottom: 20,
               }}
             >
-              <CustomIconComponent name="qr-code" size={28} color="#fff" />
+              <CustomIconComponent name="qr-code" size={28} color={colors.white} />
             </View>
           ),
         }}

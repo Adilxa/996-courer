@@ -1,3 +1,5 @@
 // Providers barrel export
-export { ProviderComponent } from './ProviderComponent';
+export { ThemeProvider, useTheme } from '../context/ThemeContext';
 export { AuthProvider, useAuth } from './AuthProvider';
+export { ProviderComponent } from './ProviderComponent';
+

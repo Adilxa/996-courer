@@ -1,3 +1,4 @@
+import { useTheme } from "@/shared/configs/context/ThemeContext";
 import { Feather } from "@expo/vector-icons";
 import React from "react";
 import {
@@ -19,12 +20,23 @@ export const CustomHeaderComponent: React.FC<CustomHeaderComponentProps> = ({
   onMenuPress,
   style,
 }) => {
+  const { colors, isDark } = useTheme();
+
   return (
-    <View style={[styles.header, style]}>
+    <View
+      style={[
+        styles.header,
+        {
+          backgroundColor: colors.background.primary,
+          borderBottomColor: colors.border.light
+        },
+        style
+      ]}
+    >
       {/* Logo text on the left */}
       <View style={styles.logoContainer}>
-        <Text style={styles.logoText}>
-          996<Text style={styles.dotText}>.kg</Text>
+        <Text style={[styles.logoText, { color: colors.primary[500] }]}>
+          996<Text style={[styles.dotText, { color: "#ec4899" }]}>.kg</Text>
         </Text>
       </View>
 
@@ -34,11 +46,11 @@ export const CustomHeaderComponent: React.FC<CustomHeaderComponentProps> = ({
           onPress={onNotificationPress}
           style={styles.iconButton}
         >
-          <Feather name="bell" size={24} color="black" />
+          <Feather name="bell" size={24} color={colors.text.primary} />
         </TouchableOpacity>
 
         <TouchableOpacity onPress={onMenuPress} style={styles.iconButton}>
-          <Feather name="menu" size={24} color="black" />
+          <Feather name="menu" size={24} color={colors.text.primary} />
         </TouchableOpacity>
       </View>
     </View>
@@ -52,9 +64,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 20,
     paddingVertical: 16,
-    backgroundColor: "white",
     borderBottomWidth: 1,
-    borderBottomColor: "#f3f4f6",
   },
   logoContainer: {
     flex: 1,
@@ -63,10 +73,8 @@ const styles = StyleSheet.create({
   logoText: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#5353F9",
   },
   dotText: {
-    color: "#F80094",
   },
   headerIcons: {
     flexDirection: "row",

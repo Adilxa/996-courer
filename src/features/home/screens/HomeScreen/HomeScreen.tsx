@@ -6,6 +6,7 @@ import {
   CustomHeaderComponent,
   SafeAreaScreenComponent,
 } from "@/shared/components";
+import { useTheme } from "@/shared/configs/context/ThemeContext";
 import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -31,26 +32,26 @@ const userInfo = [
   }
 ]
 
-const StatCardLoader = () => (
-  <View style={[styles.statCard, styles.loaderCard]}>
-    <ActivityIndicator size="small" color="#6366f1" />
-    <View style={styles.loaderLine} />
-    <View style={[styles.loaderLine, { width: '60%' }]} />
+const StatCardLoader = ({ colors }: { colors: any }) => (
+  <View style={[styles.statCard, styles.loaderCard, { backgroundColor: colors.background.primary, borderWidth: 1, borderColor: 'white' }]}>
+    <ActivityIndicator size="small" color={colors.primary[500]} />
+    <View style={[styles.loaderLine, { backgroundColor: colors.background.secondary }]} />
+    <View style={[styles.loaderLine, { width: '60%', backgroundColor: colors.background.secondary }]} />
   </View>
 );
 
-const ProfileLoader = () => (
-  <View style={styles.profileContainer}>
-    <View style={[styles.userAvatar, styles.loaderAvatar]}>
-      <ActivityIndicator size="small" color="#6366f1" />
+const ProfileLoader = ({ colors }: { colors: any }) => (
+  <View style={[styles.profileContainer, { backgroundColor: colors.background.primary, borderWidth: 1, borderColor: 'white' }]}>
+    <View style={[styles.userAvatar, styles.loaderAvatar, { backgroundColor: colors.background.secondary, borderWidth: 1, borderColor: 'white' }]}>
+      <ActivityIndicator size="small" color={colors.primary[500]} />
     </View>
-    <View style={[styles.loaderLine, { width: 150, height: 20 }]} />
+    <View style={[styles.loaderLine, { width: 150, height: 20, backgroundColor: colors.background.secondary }]} />
 
-    <View style={styles.userInfo}>
+    <View style={[styles.userInfo, { borderColor: 'white', borderWidth: 1 }]}>
       {userInfo.map((_, i) => (
         <View key={`loader_${i}`} style={styles.userInfoRow}>
-          <View style={[styles.loaderLine, { width: 120, height: 16 }]} />
-          <View style={[styles.loaderLine, { width: 80, height: 16 }]} />
+          <View style={[styles.loaderLine, { width: 120, height: 16, backgroundColor: colors.background.secondary }]} />
+          <View style={[styles.loaderLine, { width: 80, height: 16, backgroundColor: colors.background.secondary }]} />
         </View>
       ))}
     </View>
@@ -59,6 +60,7 @@ const ProfileLoader = () => (
 
 export default function HomeScreen() {
   const { t } = useTranslation();
+  const { colors, isDark } = useTheme();
   const [showMenu, setShowMenu] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
 
@@ -73,7 +75,7 @@ export default function HomeScreen() {
   })
 
   return (
-    <SafeAreaScreenComponent backgroundColor="white">
+    <SafeAreaScreenComponent backgroundColor={colors.background.primary}>
       {/* Header */}
       <CustomHeaderComponent
         onNotificationPress={() => setShowNotifications(true)}
@@ -86,57 +88,57 @@ export default function HomeScreen() {
         onClose={() => setShowMenu(false)}
       />
 
-      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+      <ScrollView style={[styles.content, { backgroundColor: colors.background.primary }]} showsVerticalScrollIndicator={false}>
         {/* Stats Cards */}
         <View style={styles.statsContainer}>
           {applicationsLoading ? (
-            <StatCardLoader />
+            <StatCardLoader colors={colors} />
           ) : (
-            <View style={styles.statCard}>
-              <CustomIconComponent name="applications" size={34} color="#fff" />
-              <Text style={styles.statTitle}>{t("home:applications")}</Text>
-              <Text style={styles.statValue}>{applications?.amount || 0}</Text>
-              <Text style={styles.statLabel}>{t("home:thisMonth")}</Text>
+            <View style={[styles.statCard, { backgroundColor: colors.background.primary, borderWidth: 1, borderColor: 'white' }]}>
+              <CustomIconComponent name="applications" size={34} color={colors.white} />
+              <Text style={[styles.statTitle, { color: colors.text.primary }]}>{t("home:applications")}</Text>
+              <Text style={[styles.statValue, { color: colors.text.primary }]}>{applications?.amount || 0}</Text>
+              <Text style={[styles.statLabel, { color: colors.text.secondary }]}>{t("home:thisMonth")}</Text>
             </View>
           )}
 
-          <View style={styles.statCard}>
-            <CustomIconComponent name="cash" size={34} color="#fff" />
-            <Text style={styles.statTitle}>{t("home:income")}</Text>
-            <Text style={styles.statValue}>35 000 с</Text>
-            <Text style={styles.statLabel}>{t("home:thisMonth")}</Text>
+          <View style={[styles.statCard, { backgroundColor: colors.background.primary, borderWidth: 1, borderColor: 'white' }]}>
+            <CustomIconComponent name="cash" size={34} color={colors.white} />
+            <Text style={[styles.statTitle, { color: colors.text.primary }]}>{t("home:income")}</Text>
+            <Text style={[styles.statValue, { color: colors.text.primary }]}>35 000 с</Text>
+            <Text style={[styles.statLabel, { color: colors.text.secondary }]}>{t("home:thisMonth")}</Text>
           </View>
         </View>
 
         {/* Profile Section */}
         {profileLoading ? (
-          <ProfileLoader />
+          <ProfileLoader colors={colors} />
         ) : (
-          <View style={styles.profileContainer}>
+          <View style={[styles.profileContainer, { backgroundColor: colors.background.primary, borderWidth: 1, borderColor: 'white' }]}>
             {data?.avatar !== null ? (
               <Image
                 source={{ uri: `${BASE_URL}/${data?.avatar?.path}` }}
                 style={styles.userAvatar}
               />
             ) : (
-              <View style={styles.userAvatar}>
-                <Text style={styles.userAvatarText}>
+              <View style={[styles.userAvatar, { backgroundColor: colors.primary[100], borderWidth: 1, borderColor: 'white' }]}>
+                <Text style={[styles.userAvatarText, { color: colors.primary[600] }]}>
                   {data?.name != null ? data?.name[0] : "AV"}
                 </Text>
               </View>
             )}
 
-            <Text style={styles.userName}>
+            <Text style={[styles.userName, { color: colors.text.primary }]}>
               {data?.name || "A"} {data?.surname || "V"}
             </Text>
 
-            <View style={styles.userInfo}>
+            <View style={[styles.userInfo, { borderColor: 'white', borderWidth: 1 }]}>
               {userInfo.map((item, i) => (
                 <View key={`${item.key}_${i}`} style={styles.userInfoRow}>
-                  <Text style={styles.userInfoRowTitle}>
+                  <Text style={[styles.userInfoRowTitle, { color: colors.text.secondary }]}>
                     {t(`home:${item.key}`)}
                   </Text>
-                  <Text style={styles.userInfoRowValue}>
+                  <Text style={[styles.userInfoRowValue, { color: colors.text.primary }]}>
                     {data?.[item.key] || '-'}
                   </Text>
                 </View>
@@ -157,7 +159,6 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f9fafb",
   },
   header: {
     flexDirection: "row",
@@ -165,12 +166,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 20,
     paddingVertical: 16,
-    backgroundColor: "white",
   },
   logo: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#6366f1",
   },
   headerIcons: {
     flexDirection: "row",
@@ -188,7 +187,6 @@ const styles = StyleSheet.create({
   },
   profileContainer: {
     flexDirection: "column",
-    backgroundColor: "white",
     alignItems: "center",
     borderRadius: 16,
     paddingVertical: 15,
@@ -204,7 +202,6 @@ const styles = StyleSheet.create({
   },
   statCard: {
     flex: 1,
-    backgroundColor: "white",
     borderRadius: 16,
     padding: 20,
     alignItems: "center",
@@ -221,11 +218,9 @@ const styles = StyleSheet.create({
     minHeight: 140,
   },
   loaderAvatar: {
-    backgroundColor: "#f3f4f6",
   },
   loaderLine: {
     height: 12,
-    backgroundColor: "#f3f4f6",
     borderRadius: 6,
     width: "80%",
     marginVertical: 2,
@@ -233,7 +228,6 @@ const styles = StyleSheet.create({
   statValue: {
     fontSize: 28,
     fontWeight: "bold",
-    color: "#111827",
     marginBottom: 4,
   },
   statLabel: {
@@ -252,7 +246,6 @@ const styles = StyleSheet.create({
   logoContainer: {
     width: 80,
     height: 80,
-    backgroundColor: "#6366f1",
     borderRadius: 40,
     justifyContent: "center",
     alignItems: "center",
@@ -265,12 +258,10 @@ const styles = StyleSheet.create({
   },
   companyName: {
     fontSize: 14,
-    color: "#6b7280",
     textAlign: "center",
     lineHeight: 20,
   },
   pvzCard: {
-    backgroundColor: "#e0f2fe",
     borderRadius: 12,
     padding: 16,
     marginBottom: 20,
@@ -285,12 +276,10 @@ const styles = StyleSheet.create({
   pvzCardTitle: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#111827",
     marginBottom: 2,
   },
   pvzCardDescription: {
     fontSize: 14,
-    color: "#6b7280",
   },
   contactIcons: {
     flexDirection: "row",
@@ -302,7 +291,6 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: "white",
     justifyContent: "center",
     alignItems: "center",
     shadowColor: "#000",
@@ -312,7 +300,6 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   infoSection: {
-    backgroundColor: "white",
     borderRadius: 12,
     padding: 16,
     marginBottom: 20,
@@ -325,13 +312,10 @@ const styles = StyleSheet.create({
   },
   ratingLabel: {
     fontSize: 16,
-    color: "#111827",
   },
   ratingValue: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#6366f1",
-    backgroundColor: "#e0e7ff",
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 8,
@@ -339,7 +323,6 @@ const styles = StyleSheet.create({
   scheduleLabel: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#111827",
     marginBottom: 8,
   },
   statusRow: {
@@ -351,13 +334,11 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: "#10b981",
     marginRight: 8,
   },
   statusText: {
     flex: 1,
     fontSize: 14,
-    color: "#111827",
   },
   scheduleTable: {
     marginBottom: 16,
@@ -366,34 +347,28 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     paddingVertical: 8,
     borderBottomWidth: 1,
-    borderBottomColor: "#e5e7eb",
   },
   scheduleHeaderText: {
     flex: 1,
     fontSize: 14,
     fontWeight: "600",
-    color: "#6b7280",
   },
   scheduleRow: {
     flexDirection: "row",
     paddingVertical: 8,
     borderBottomWidth: 1,
-    borderBottomColor: "#f3f4f6",
   },
   scheduleDay: {
     flex: 1,
     fontSize: 14,
-    color: "#111827",
   },
   scheduleHours: {
     flex: 1,
     fontSize: 14,
-    color: "#111827",
   },
   scheduleLunch: {
     flex: 1,
     fontSize: 14,
-    color: "#111827",
   },
   editButton: {
     flexDirection: "row",
@@ -403,7 +378,6 @@ const styles = StyleSheet.create({
   },
   editButtonText: {
     fontSize: 14,
-    color: "#6b7280",
     marginLeft: 4,
   },
   footer: {
@@ -412,18 +386,15 @@ const styles = StyleSheet.create({
   },
   footerDate: {
     fontSize: 14,
-    color: "#9ca3af",
   },
   footerDateValue: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#111827",
     marginVertical: 4,
   },
   footerPhone: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#6366f1",
   },
   // Menu styles
   menuOverlay: {
@@ -432,7 +403,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: "#ffffff",
     zIndex: 1000,
   },
   closeButton: {
@@ -461,7 +431,6 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     marginBottom: 20,
     borderBottomWidth: 1,
-    borderBottomColor: "#f3f4f6",
   },
   userAvatar: {
     width: "35%",
@@ -474,14 +443,12 @@ const styles = StyleSheet.create({
   userAvatarText: {
     fontSize: 28,
     fontWeight: "700",
-    color: "#111827",
   },
   userInfo: {
     flex: 1,
     width: "100%",
     borderWidth: 1,
     borderRadius: 8,
-    borderColor: "#e5e7eb",
     padding: 15,
     flexDirection: "column",
     gap: 10,
@@ -495,25 +462,20 @@ const styles = StyleSheet.create({
   userInfoRowTitle: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#999999",
   },
   userInfoRowValue: {
     fontSize: 16,
-    color: "#282828",
     fontWeight: "600",
   },
   userName: {
     fontSize: 18,
     fontWeight: "600",
-    color: "#111827",
     marginBottom: 2,
   },
   userEmail: {
     fontSize: 14,
-    color: "#6b7280",
   },
   loginButton: {
-    backgroundColor: "#6366f1",
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
@@ -537,13 +499,11 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: "#f3f4f6",
     alignItems: "center",
     justifyContent: "center",
   },
   languageSelector: {
     flexDirection: "row",
-    backgroundColor: "#f3f4f6",
     borderRadius: 20,
     padding: 2,
   },
@@ -553,11 +513,9 @@ const styles = StyleSheet.create({
     borderRadius: 18,
   },
   activeLangButton: {
-    backgroundColor: "#6366f1",
   },
   langText: {
     fontSize: 14,
-    color: "#6b7280",
     fontWeight: "500",
   },
   activeLangText: {
@@ -571,11 +529,9 @@ const styles = StyleSheet.create({
   },
   menuItemText: {
     fontSize: 16,
-    color: "#374151",
     marginLeft: 12,
   },
   startSellingButton: {
-    backgroundColor: "#6366f1",
     paddingVertical: 16,
     borderRadius: 25,
     alignItems: "center",
@@ -595,12 +551,10 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#111827",
     marginBottom: 12,
   },
   menuLink: {
     fontSize: 14,
-    color: "#6b7280",
     paddingVertical: 4,
   },
   socialIcons: {
@@ -612,7 +566,6 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: "#374151",
     alignItems: "center",
     justifyContent: "center",
   },
@@ -628,7 +581,6 @@ const styles = StyleSheet.create({
   },
   appStoreButton: {
     flex: 1,
-    backgroundColor: "#111827",
     paddingVertical: 12,
     borderRadius: 8,
     alignItems: "center",
@@ -639,7 +591,6 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
   logoutButton: {
-    backgroundColor: "#ef4444",
     paddingVertical: 16,
     borderRadius: 25,
     alignItems: "center",
@@ -652,7 +603,6 @@ const styles = StyleSheet.create({
   },
   copyright: {
     fontSize: 12,
-    color: "#9ca3af",
     textAlign: "center",
     marginBottom: 20,
   },

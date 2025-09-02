@@ -1,4 +1,5 @@
 import { useLanguage } from "@/shared/configs/context/LanguageContext";
+import { useTheme } from "@/shared/configs/context/ThemeContext";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
@@ -10,6 +11,7 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
   style,
 }) => {
   const { currentLanguage, changeLanguage } = useLanguage();
+  const { colors } = useTheme();
 
   const languages = [
     { code: "ru", label: "RU" },
@@ -18,20 +20,20 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
   ];
 
   return (
-    <View style={[styles.container, style]}>
+    <View style={[styles.container, { backgroundColor: colors.background.secondary }, style]}>
       {languages.map((lang) => (
         <TouchableOpacity
           key={lang.code}
           style={[
             styles.languageButton,
-            currentLanguage === lang.code && styles.activeLanguageButton,
+            currentLanguage === lang.code && { backgroundColor: colors.primary[500] },
           ]}
           onPress={() => changeLanguage(lang.code as any)}
         >
           <Text
             style={[
               styles.languageText,
-              currentLanguage === lang.code && styles.activeLanguageText,
+              { color: currentLanguage === lang.code ? colors.white : colors.text.secondary },
             ]}
           >
             {lang.label}
@@ -45,7 +47,6 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    backgroundColor: "#f3f4f6",
     borderRadius: 20,
     padding: 4,
   },
@@ -55,15 +56,8 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     marginHorizontal: 2,
   },
-  activeLanguageButton: {
-    backgroundColor: "#5353F9",
-  },
   languageText: {
     fontSize: 14,
     fontWeight: "500",
-    color: "#6b7280",
-  },
-  activeLanguageText: {
-    color: "white",
   },
 });

@@ -1,5 +1,6 @@
 import { CustomIconComponent } from "@/shared/assets/icons/settings/CustomIconComponent";
-import React, { useState } from "react";
+import { useTheme } from "@/shared/configs/context/ThemeContext";
+import React from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 
 interface ThemeSwitcherProps {
@@ -7,15 +8,11 @@ interface ThemeSwitcherProps {
 }
 
 export const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({ style }) => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
-
-  const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode);
-    // TODO: Implement theme switching logic
-  };
+  const { theme, toggleTheme, colors } = useTheme();
+  const isDarkMode = theme === 'dark';
 
   return (
-    <View style={[styles.container, style]}>
+    <View style={[styles.container, style, { backgroundColor: colors.background.secondary }]}>
       <TouchableOpacity
         style={[
           styles.themeButton,
@@ -23,10 +20,10 @@ export const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({ style }) => {
         ]}
         onPress={() => !isDarkMode && toggleTheme()}
       >
-        <CustomIconComponent 
-          name="sunny" 
-          size={20} 
-          color={!isDarkMode ? "white" : "#6b7280"} 
+        <CustomIconComponent
+          name="sunny"
+          size={20}
+          color={!isDarkMode ? colors.white : colors.text.secondary}
         />
       </TouchableOpacity>
       <TouchableOpacity
@@ -36,10 +33,10 @@ export const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({ style }) => {
         ]}
         onPress={() => isDarkMode && toggleTheme()}
       >
-        <CustomIconComponent 
-          name="moon" 
-          size={20} 
-          color={isDarkMode ? "white" : "#6b7280"} 
+        <CustomIconComponent
+          name="moon"
+          size={20}
+          color={isDarkMode ? colors.white : colors.text.secondary}
         />
       </TouchableOpacity>
     </View>
@@ -49,7 +46,6 @@ export const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({ style }) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    backgroundColor: "#f3f4f6",
     borderRadius: 20,
     padding: 4,
   },

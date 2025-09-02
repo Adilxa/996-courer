@@ -1,4 +1,5 @@
 import { CustomIconComponent } from "@/shared/assets/icons/settings/CustomIconComponent";
+import { useTheme } from "@/shared/configs/context/ThemeContext";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -111,6 +112,7 @@ export const NotificationModal: React.FC<NotificationModalProps> = ({
   onClose,
 }) => {
   const { t } = useTranslation();
+  const { colors } = useTheme();
   const [activeTab, setActiveTab] = useState<
     "all" | "notification" | "payment" | "news"
   >("all");
@@ -169,30 +171,31 @@ export const NotificationModal: React.FC<NotificationModalProps> = ({
     >
       <TouchableWithoutFeedback onPress={onClose}>
         <View style={styles.overlay}>
-          <TouchableWithoutFeedback onPress={() => {}}>
-            <View style={styles.container}>
+          <TouchableWithoutFeedback onPress={() => { }}>
+            <View style={[styles.container, { backgroundColor: colors.background.primary }]}>
               {/* Header */}
-              <View style={styles.header}>
+              <View style={[styles.header, { backgroundColor: colors.background.primary, borderBottomColor: colors.border.light }]}>
                 <TouchableOpacity onPress={onClose}>
                   <CustomIconComponent
                     name="chevronLeft"
                     size={24}
-                    color="#374151"
+                    color={colors.text.primary}
                   />
                 </TouchableOpacity>
-                <Text style={styles.headerTitle}>
+                <Text style={[styles.headerTitle, { color: colors.text.primary }]}>
                   {t("notifications:title")}
                 </Text>
                 <View style={{ width: 24 }} />
               </View>
 
               {/* Tabs */}
-              <View style={styles.tabContainer}>
+              <View style={[styles.tabContainer, { backgroundColor: colors.background.primary, borderBottomColor: colors.border.light }]}>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                   <TouchableOpacity
                     style={[
                       styles.tab,
-                      activeTab === "all" && styles.activeTab,
+                      { backgroundColor: colors.background.secondary },
+                      activeTab === "all" && { backgroundColor: colors.primary[500] },
                     ]}
                     onPress={() => setActiveTab("all")}
                   >
@@ -200,18 +203,18 @@ export const NotificationModal: React.FC<NotificationModalProps> = ({
                       <CustomIconComponent
                         name="notification"
                         size={20}
-                        color={activeTab === "all" ? "#ffffff" : "#6366f1"}
+                        color={activeTab === "all" ? colors.white : colors.primary[500]}
                       />
                       <Text
                         style={[
                           styles.tabText,
-                          activeTab === "all" && styles.activeTabText,
+                          { color: activeTab === "all" ? colors.white : colors.primary[500] },
                         ]}
                       >
                         {t("notifications:all")}
                       </Text>
                       {hasUnreadNotifications("all") && (
-                        <View style={styles.unreadDot} />
+                        <View style={[styles.unreadDot, { backgroundColor: colors.error[500] }]} />
                       )}
                     </View>
                   </TouchableOpacity>
@@ -221,7 +224,8 @@ export const NotificationModal: React.FC<NotificationModalProps> = ({
                       key={type}
                       style={[
                         styles.tab,
-                        activeTab === type && styles.activeTab,
+                        { backgroundColor: colors.background.secondary },
+                        activeTab === type && { backgroundColor: colors.primary[500] },
                       ]}
                       onPress={() => setActiveTab(type as any)}
                     >
@@ -229,18 +233,18 @@ export const NotificationModal: React.FC<NotificationModalProps> = ({
                         <CustomIconComponent
                           name={getTabIcon(type) as any}
                           size={20}
-                          color={activeTab === type ? "#ffffff" : "#6366f1"}
+                          color={activeTab === type ? colors.white : colors.primary[500]}
                         />
                         <Text
                           style={[
                             styles.tabText,
-                            activeTab === type && styles.activeTabText,
+                            { color: activeTab === type ? colors.white : colors.primary[500] },
                           ]}
                         >
                           {getTabTitle(type)}
                         </Text>
                         {hasUnreadNotifications(type) && (
-                          <View style={styles.unreadDot} />
+                          <View style={[styles.unreadDot, { backgroundColor: colors.error[500] }]} />
                         )}
                       </View>
                     </TouchableOpacity>
@@ -259,10 +263,10 @@ export const NotificationModal: React.FC<NotificationModalProps> = ({
                       <CustomIconComponent
                         name="notification"
                         size={48}
-                        color="#d1d5db"
+                        color={colors.text.secondary}
                       />
                     </View>
-                    <Text style={styles.emptyStateTitle}>
+                    <Text style={[styles.emptyStateTitle, { color: colors.text.secondary }]}>
                       {t("notifications:empty")}
                     </Text>
                   </View>
@@ -272,33 +276,34 @@ export const NotificationModal: React.FC<NotificationModalProps> = ({
                       key={notification.id}
                       style={[
                         styles.notificationItem,
-                        !notification.isRead && styles.unreadNotification,
+                        { backgroundColor: colors.background.primary },
+                        !notification.isRead && { borderLeftColor: colors.primary[500] },
                       ]}
                       onPress={() => markAsRead(notification.id)}
                     >
-                      <View style={styles.notificationIcon}>
+                      <View style={[styles.notificationIcon, { backgroundColor: colors.primary[100] }]}>
                         <CustomIconComponent
                           name={getTabIcon(notification.type) as any}
                           size={24}
-                          color="#6366f1"
+                          color={colors.primary[500]}
                         />
                       </View>
                       <View style={styles.notificationContent}>
-                        <Text style={styles.notificationTitle}>
+                        <Text style={[styles.notificationTitle, { color: colors.text.primary }]}>
                           {notification.title}
                         </Text>
                         <Text
-                          style={styles.notificationMessage}
+                          style={[styles.notificationMessage, { color: colors.text.secondary }]}
                           numberOfLines={3}
                         >
                           {notification.message}
                         </Text>
-                        <Text style={styles.notificationTime}>
+                        <Text style={[styles.notificationTime, { color: colors.text.secondary }]}>
                           {notification.time}
                         </Text>
                       </View>
                       {!notification.isRead && (
-                        <View style={styles.unreadIndicator} />
+                        <View style={[styles.unreadIndicator, { backgroundColor: colors.primary[500] }]} />
                       )}
                     </TouchableOpacity>
                   ))
@@ -319,11 +324,9 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
   container: {
-    backgroundColor: "#f9fafb",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    maxHeight: height * 0.9,
-    minHeight: height * 0.6,
+    height: height * 0.9, // Изменено с maxHeight на height и увеличено до 90%
   },
   header: {
     flexDirection: "row",
@@ -331,32 +334,23 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 20,
     paddingVertical: 16,
-    backgroundColor: "white",
     borderBottomWidth: 1,
-    borderBottomColor: "#f3f4f6",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
   },
   headerTitle: {
     fontSize: 18,
     fontWeight: "600",
-    color: "#111827",
   },
   tabContainer: {
-    backgroundColor: "white",
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: "#f3f4f6",
   },
   tab: {
     marginHorizontal: 8,
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
-    backgroundColor: "#f3f4f6",
-  },
-  activeTab: {
-    backgroundColor: "#6366f1",
   },
   tabContent: {
     flexDirection: "row",
@@ -366,17 +360,12 @@ const styles = StyleSheet.create({
   tabText: {
     fontSize: 14,
     fontWeight: "500",
-    color: "#6366f1",
     marginLeft: 8,
-  },
-  activeTabText: {
-    color: "#ffffff",
   },
   unreadDot: {
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: "#ef4444",
     marginLeft: 4,
   },
   notificationsList: {
@@ -394,12 +383,10 @@ const styles = StyleSheet.create({
   },
   emptyStateTitle: {
     fontSize: 16,
-    color: "#9ca3af",
     textAlign: "center",
   },
   notificationItem: {
     flexDirection: "row",
-    backgroundColor: "white",
     borderRadius: 12,
     padding: 16,
     marginVertical: 6,
@@ -411,13 +398,11 @@ const styles = StyleSheet.create({
   },
   unreadNotification: {
     borderLeftWidth: 4,
-    borderLeftColor: "#6366f1",
   },
   notificationIcon: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: "#e0e7ff",
     justifyContent: "center",
     alignItems: "center",
     marginRight: 12,
@@ -428,24 +413,20 @@ const styles = StyleSheet.create({
   notificationTitle: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#111827",
     marginBottom: 4,
   },
   notificationMessage: {
     fontSize: 14,
-    color: "#6b7280",
     lineHeight: 20,
     marginBottom: 8,
   },
   notificationTime: {
     fontSize: 12,
-    color: "#9ca3af",
   },
   unreadIndicator: {
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: "#6366f1",
     marginTop: 4,
   },
 });
