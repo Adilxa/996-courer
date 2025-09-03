@@ -15,11 +15,11 @@ export default function TabLayout() {
         tabBarInactiveTintColor: colors.text.secondary,
         tabBarStyle: {
           backgroundColor: colors.background.primary,
+          borderTopColor: isDark ? colors.darkBorder : colors.border.light,
           borderTopWidth: 1,
-          borderTopColor: colors.border.light,
+          height: 90,
           paddingBottom: 8,
           paddingTop: 8,
-          height: 90,
         },
         tabBarLabelStyle: {
           fontSize: 12,

@@ -1,3 +1,4 @@
+import { useTheme } from "@/shared/configs/context/ThemeContext";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useRef } from "react";
 import {
@@ -27,6 +28,7 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
   children,
   height = SCREEN_HEIGHT * 0.63,
 }) => {
+  const { colors, isDark } = useTheme();
   const translateY = useRef(new Animated.Value(height)).current;
   const opacity = useRef(new Animated.Value(0)).current;
 
@@ -80,18 +82,19 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
             {
               height,
               transform: [{ translateY }],
+              backgroundColor: colors.background.primary,
             },
           ]}
         >
           {/* Handle */}
-          <View style={styles.handle} />
+          <View style={[styles.handle, { backgroundColor: isDark ? '#4b5563' : '#d1d5db' }]} />
 
           {/* Header */}
           {title && (
-            <View style={styles.header}>
-              <Text style={styles.title}>{title}</Text>
+            <View style={[styles.header, { borderBottomColor: isDark ? colors.darkBorder : '#f3f4f6' }]}>
+              <Text style={[styles.title, { color: colors.text.primary }]}>{title}</Text>
               <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-                <Ionicons name="close" size={24} color="#9ca3af" />
+                <Ionicons name="close" size={24} color={colors.text.secondary} />
               </TouchableOpacity>
             </View>
           )}
@@ -118,7 +121,6 @@ const styles = StyleSheet.create({
     bottom: 0,
   },
   bottomSheet: {
-    backgroundColor: "white",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     paddingTop: 8,
@@ -126,7 +128,6 @@ const styles = StyleSheet.create({
   handle: {
     width: 40,
     height: 4,
-    backgroundColor: "#d1d5db",
     borderRadius: 2,
     alignSelf: "center",
     marginBottom: 16,
@@ -138,12 +139,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingBottom: 16,
     borderBottomWidth: 1,
-    borderBottomColor: "#f3f4f6",
   },
   title: {
     fontSize: 18,
     fontWeight: "600",
-    color: "#111827",
   },
   closeButton: {
     padding: 4,

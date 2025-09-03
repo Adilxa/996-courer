@@ -4,6 +4,7 @@ import {
   CustomHeaderComponent,
 } from "@/shared/components";
 import { useLanguage } from "@/shared/configs/context/LanguageContext";
+import { useTheme } from "@/shared/configs/context/ThemeContext";
 import { Ionicons } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
@@ -34,31 +35,54 @@ interface Transaction {
 }
 
 // Компонент лоадера для карточек кошелька
-const WalletCardLoader = () => (
-  <View style={[styles.balanceCard, styles.loaderCard]}>
+const WalletCardLoader = ({ colors, isDark }: { colors: any; isDark: boolean }) => (
+  <View style={[
+    styles.balanceCard,
+    styles.loaderCard,
+    {
+      backgroundColor: colors.background.card,
+      shadowColor: isDark ? "transparent" : "#000",
+      shadowOffset: isDark ? { width: 0, height: 0 } : { width: 0, height: 2 },
+      shadowOpacity: isDark ? 0 : 0.05,
+      shadowRadius: isDark ? 0 : 8,
+      elevation: isDark ? 0 : 2,
+    }
+  ]}>
     <View style={styles.balanceHeader}>
-      <ActivityIndicator size="small" color="#6b7280" />
-      <View style={[styles.loaderLine, { width: 100, marginLeft: 8 }]} />
+      <ActivityIndicator size="small" color={colors.text.secondary} />
+      <View style={[styles.loaderLine, { width: 100, marginLeft: 8, backgroundColor: colors.background.secondary }]} />
     </View>
-    <View style={[styles.loaderLine, { width: 150, marginBottom: 4 }]} />
-    <View style={[styles.loaderLine, { width: 100, height: 32 }]} />
+    <View style={[styles.loaderLine, { width: 150, marginBottom: 4, backgroundColor: colors.background.secondary }]} />
+    <View style={[styles.loaderLine, { width: 100, height: 32, backgroundColor: colors.background.secondary }]} />
   </View>
 );
 
-const ActionCardLoader = () => (
-  <View style={[styles.actionCard, styles.loaderCard]}>
+const ActionCardLoader = ({ colors, isDark }: { colors: any; isDark: boolean }) => (
+  <View style={[
+    styles.actionCard,
+    styles.loaderCard,
+    {
+      backgroundColor: colors.background.card,
+      shadowColor: isDark ? "transparent" : "#000",
+      shadowOffset: isDark ? { width: 0, height: 0 } : { width: 0, height: 2 },
+      shadowOpacity: isDark ? 0 : 0.05,
+      shadowRadius: isDark ? 0 : 8,
+      elevation: isDark ? 0 : 2,
+    }
+  ]}>
     <View style={styles.actionHeader}>
-      <ActivityIndicator size="small" color="#6366f1" />
-      <View style={[styles.loaderLine, { width: 120, marginLeft: 8 }]} />
+      <ActivityIndicator size="small" color={colors.primary[500]} />
+      <View style={[styles.loaderLine, { width: 120, marginLeft: 8, backgroundColor: colors.background.secondary }]} />
     </View>
-    <View style={[styles.loaderLine, { width: 140, marginBottom: 4 }]} />
-    <View style={[styles.loaderLine, { width: 80, height: 20 }]} />
+    <View style={[styles.loaderLine, { width: 140, marginBottom: 4, backgroundColor: colors.background.secondary }]} />
+    <View style={[styles.loaderLine, { width: 80, height: 20, backgroundColor: colors.background.secondary }]} />
   </View>
 );
 
 export default function WalletScreen() {
   const { t } = useTranslation();
   const { currentLanguage, changeLanguage } = useLanguage();
+  const { colors, isDark } = useTheme();
   const [activeBottomSheet, setActiveBottomSheet] = useState<string | null>(
     null
   );
@@ -181,27 +205,41 @@ export default function WalletScreen() {
   console.log(statuses, "statuses");
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="white" />
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background.primary }]}>
+      <StatusBar barStyle={isDark ? "light-content" : "dark-content"} backgroundColor={colors.background.primary} />
+
+      {/* Header */}
       <CustomHeaderComponent
         onNotificationPress={() => setShowNotifications(true)}
         onMenuPress={() => setShowMenu(!showMenu)}
       />
-      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
 
+      <ScrollView style={[styles.content, { backgroundColor: colors.background.primary }]} showsVerticalScrollIndicator={false}>
         {/* Баланс */}
         {balanceLoading ? (
-          <WalletCardLoader />
+          <WalletCardLoader colors={colors} isDark={isDark} />
         ) : (
-          <View style={styles.balanceCard}>
+          <View style={[
+            styles.balanceCard,
+            {
+              backgroundColor: colors.background.card,
+              shadowColor: isDark ? "transparent" : "#000",
+              shadowOffset: isDark ? { width: 0, height: 0 } : { width: 0, height: 2 },
+              shadowOpacity: isDark ? 0 : 0.05,
+              shadowRadius: isDark ? 0 : 8,
+              elevation: isDark ? 0 : 2,
+            }
+          ]}>
             <View style={styles.balanceHeader}>
-              <Ionicons name="wallet" size={24} color="#6b7280" />
-              <Text style={styles.balanceLabel}>{t("wallet:balance")}</Text>
+              <Ionicons name="wallet" size={24} color={colors.primary[500]} />
+              <Text style={[styles.balanceLabel, { color: colors.text.primary }]}>
+                {t("wallet:balance")}
+              </Text>
             </View>
-            <Text style={styles.availableBalance}>
+            <Text style={[styles.availableBalance, { color: colors.text.secondary }]}>
               {t("wallet:availableBalance")}:
             </Text>
-            <Text style={styles.balanceAmount}>
+            <Text style={[styles.balanceAmount, { color: colors.text.primary }]}>
               {balanceData?.amount || 0} с
             </Text>
           </View>
@@ -209,17 +247,27 @@ export default function WalletScreen() {
 
         {/* Пополнение баланса */}
         {topUpLoading ? (
-          <ActionCardLoader />
+          <ActionCardLoader colors={colors} isDark={isDark} />
         ) : (
           <TouchableOpacity
-            style={styles.actionCard}
+            style={[
+              styles.actionCard,
+              {
+                backgroundColor: colors.background.card,
+                shadowColor: isDark ? "transparent" : "#000",
+                shadowOffset: isDark ? { width: 0, height: 0 } : { width: 0, height: 2 },
+                shadowOpacity: isDark ? 0 : 0.05,
+                shadowRadius: isDark ? 0 : 8,
+                elevation: isDark ? 0 : 2,
+              }
+            ]}
           >
             <View style={styles.actionHeader}>
               <Ionicons name="add" size={24} color="#10b981" />
-              <Text style={styles.actionTitle}>{t("wallet:topUpBalance")}</Text>
+              <Text style={[styles.actionTitle, { color: colors.text.primary }]}>{t("wallet:topUpBalance")}</Text>
             </View>
-            <Text style={styles.actionSubtitle}>{t("wallet:minimumTopUp")}:</Text>
-            <Text style={styles.actionAmount}>
+            <Text style={[styles.actionSubtitle, { color: colors.text.secondary }]}>{t("wallet:minimumTopUp")}:</Text>
+            <Text style={[styles.actionAmount, { color: colors.text.primary }]}>
               {topUpData?.amount || 500} с
             </Text>
           </TouchableOpacity>
@@ -227,20 +275,30 @@ export default function WalletScreen() {
 
         {/* Вывод средств */}
         {withdrawLoading ? (
-          <ActionCardLoader />
+          <ActionCardLoader colors={colors} isDark={isDark} />
         ) : (
           <TouchableOpacity
-            style={styles.actionCard}
+            style={[
+              styles.actionCard,
+              {
+                backgroundColor: colors.background.card,
+                shadowColor: isDark ? "transparent" : "#000",
+                shadowOffset: isDark ? { width: 0, height: 0 } : { width: 0, height: 2 },
+                shadowOpacity: isDark ? 0 : 0.05,
+                shadowRadius: isDark ? 0 : 8,
+                elevation: isDark ? 0 : 2,
+              }
+            ]}
             onPress={() => openBottomSheet("withdraw")}
           >
             <View style={styles.actionHeader}>
               <Ionicons name="card" size={24} color="#6366f1" />
-              <Text style={styles.actionTitle}>{t("wallet:withdraw")}</Text>
+              <Text style={[styles.actionTitle, { color: colors.text.primary }]}>{t("wallet:withdraw")}</Text>
             </View>
-            <Text style={styles.actionSubtitle}>
+            <Text style={[styles.actionSubtitle, { color: colors.text.secondary }]}>
               {t("wallet:availableToWithdraw")}:
             </Text>
-            <Text style={styles.actionAmount}>
+            <Text style={[styles.actionAmount, { color: colors.text.primary }]}>
               {withdrawData?.amount || 0} с
             </Text>
           </TouchableOpacity>
@@ -248,22 +306,32 @@ export default function WalletScreen() {
 
         {/* Страховой депозит */}
         {depositLoading ? (
-          <ActionCardLoader />
+          <ActionCardLoader colors={colors} isDark={isDark} />
         ) : (
           <TouchableOpacity
-            style={styles.actionCard}
+            style={[
+              styles.actionCard,
+              {
+                backgroundColor: colors.background.card,
+                shadowColor: isDark ? "transparent" : "#000",
+                shadowOffset: isDark ? { width: 0, height: 0 } : { width: 0, height: 2 },
+                shadowOpacity: isDark ? 0 : 0.05,
+                shadowRadius: isDark ? 0 : 8,
+                elevation: isDark ? 0 : 2,
+              }
+            ]}
             onPress={() => openBottomSheet("insurance")}
           >
             <View style={styles.actionHeader}>
               <Ionicons name="shield-checkmark" size={24} color="#f59e0b" />
-              <Text style={styles.actionTitle}>
+              <Text style={[styles.actionTitle, { color: colors.text.primary }]}>
                 {t("wallet:securityDeposit")}
               </Text>
             </View>
-            <Text style={styles.actionSubtitle}>
+            <Text style={[styles.actionSubtitle, { color: colors.text.secondary }]}>
               {t("wallet:automaticAmount")}:
             </Text>
-            <Text style={styles.actionAmount}>
+            <Text style={[styles.actionAmount, { color: colors.text.primary }]}>
               {depositData?.amount || 0} с
             </Text>
           </TouchableOpacity>
@@ -271,28 +339,42 @@ export default function WalletScreen() {
 
         {/* Фильтры */}
         <TouchableOpacity
-          style={styles.dateFilter}
+          style={[
+            styles.dateFilter,
+            {
+              backgroundColor: colors.background.card,
+              shadowColor: isDark ? "transparent" : "#000",
+              shadowOffset: isDark ? { width: 0, height: 0 } : { width: 0, height: 2 },
+              shadowOpacity: isDark ? 0 : 0.05,
+              shadowRadius: isDark ? 0 : 8,
+              elevation: isDark ? 0 : 2,
+            }
+          ]}
           onPress={() => setShowCalendarModal(true)}
         >
-          <Ionicons name="calendar" size={20} color="#6b7280" />
+          <Ionicons name="calendar" size={20} color={colors.text.secondary} />
           <Text style={[
             styles.dateText,
+            { color: colors.text.primary },
             selectedDateText && styles.selectedDateText
           ]}>
             {selectedDateText || t("filters:dateRange")}
           </Text>
           {selectedDateText ? (
             <TouchableOpacity onPress={clearDateFilter}>
-              <Ionicons name="close" size={20} color="#6b7280" />
+              <Ionicons name="close" size={20} color={colors.text.secondary} />
             </TouchableOpacity>
           ) : (
-            <Ionicons name="chevron-down" size={20} color="#6b7280" />
+            <Ionicons name="chevron-down" size={20} color={colors.text.secondary} />
           )}
         </TouchableOpacity>
 
         <Statuses setStatuses={setStatuses} statuses={statuses} />
 
-        <TouchableOpacity style={styles.applyButton}>
+        <TouchableOpacity style={[
+          styles.applyButton,
+          { backgroundColor: colors.primary[500] }
+        ]}>
           <Text style={styles.applyButtonText}>{t("common:apply")}</Text>
         </TouchableOpacity>
 
@@ -371,7 +453,6 @@ export default function WalletScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
   },
   content: {
     flex: 1,
@@ -379,15 +460,9 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
   balanceCard: {
-    backgroundColor: "white",
     borderRadius: 16,
     padding: 20,
     marginBottom: 12,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 2,
   },
   balanceHeader: {
     flexDirection: "row",
@@ -397,29 +472,20 @@ const styles = StyleSheet.create({
   balanceLabel: {
     fontSize: 16,
     fontWeight: "500",
-    color: "#374151",
     marginLeft: 8,
   },
   availableBalance: {
     fontSize: 14,
-    color: "#9ca3af",
     marginBottom: 4,
   },
   balanceAmount: {
     fontSize: 32,
     fontWeight: "bold",
-    color: "#111827",
   },
   actionCard: {
-    backgroundColor: "white",
     borderRadius: 16,
     padding: 20,
     marginBottom: 12,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 2,
   },
   actionHeader: {
     flexDirection: "row",
@@ -429,18 +495,15 @@ const styles = StyleSheet.create({
   actionTitle: {
     fontSize: 16,
     fontWeight: "500",
-    color: "#374151",
     marginLeft: 8,
   },
   actionSubtitle: {
     fontSize: 14,
-    color: "#9ca3af",
     marginBottom: 4,
   },
   actionAmount: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#111827",
   },
   // Стили для лоадеров
   loaderCard: {
@@ -449,27 +512,19 @@ const styles = StyleSheet.create({
   },
   loaderLine: {
     height: 12,
-    backgroundColor: "#f3f4f6",
     borderRadius: 6,
     marginVertical: 2,
   },
   dateFilter: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "white",
     borderRadius: 12,
     padding: 16,
     marginBottom: 12,
     marginTop: 8,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 2,
   },
   dateText: {
     fontSize: 14,
-    color: "#374151",
     marginLeft: 8,
     flex: 1,
   },
@@ -478,7 +533,6 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   applyButton: {
-    backgroundColor: "#6366f1",
     borderRadius: 12,
     padding: 16,
     alignItems: "center",

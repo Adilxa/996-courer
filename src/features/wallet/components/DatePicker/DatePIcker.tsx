@@ -1,4 +1,5 @@
 // CalendarModal.tsx
+import { useTheme } from '@/shared/configs/context/ThemeContext';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -26,7 +27,7 @@ interface CalendarModalProps {
     initialDateRange?: DateRange;
     title?: string;
     allowSingleDate?: boolean;
-    currentLanguage: string; // Добавлен проп для текущего языка
+    currentLanguage: "ru" | "en" | "kg"; // Исправлен тип для текущего языка
 }
 
 interface DayItemProps {
@@ -43,7 +44,7 @@ const translations = {
     weekDays: {
         en: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
         ru: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
-        ky: ['Жш', 'Дш', 'Шш', 'Шр', 'Бш', 'Жм', 'Иш']
+        kg: ['Жш', 'Дш', 'Шш', 'Шр', 'Бш', 'Жм', 'Иш']
     },
     months: {
         en: [
@@ -54,15 +55,15 @@ const translations = {
             'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
             'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'
         ],
-        ky: [
-            'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
-            'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'
+        kg: [
+            'Үчтүн айы', 'Бирдин айы', 'Жалган куран', 'Чын куран', 'Бугу', 'Кулжа',
+            'Теке', 'Баш оона', 'Аяк оона', 'Тогуздун айы', 'Жетинин айы', 'Бештин айы'
         ]
     },
     monthsShort: {
         en: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
         ru: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'],
-        ky: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек']
+        kg: ['Үчт', 'Бирд', 'Жалг', 'Чын', 'Бугу', 'Кулж', 'Теке', 'Баш', 'Аяк', 'Тогуз', 'Жетин', 'Бешт']
     }
 };
 
@@ -74,6 +75,8 @@ const DayItem: React.FC<DayItemProps> = ({
     isToday,
     onPress
 }) => {
+    const { colors, isDark } = useTheme();
+
     const handlePress = (): void => {
         if (day) {
             onPress(day);
@@ -85,10 +88,16 @@ const DayItem: React.FC<DayItemProps> = ({
 
         if (isStartDate || isEndDate) {
             styles.push(modalStyles.rangeBoundary);
+            styles.push({ backgroundColor: '#6366f1' }); // Синий фон для выбранных дней
         } else if (isInRange) {
             styles.push(modalStyles.inRange);
+            styles.push({ backgroundColor: isDark ? '#1e3a8a' : '#e0e7ff' }); // Темно-синий для темной темы, светло-синий для светлой
         } else if (isToday && day) {
             styles.push(modalStyles.today);
+            styles.push({ backgroundColor: isDark ? '#374151' : '#f3f4f6' }); // Темно-серый для темной темы, светло-серый для светлой
+        } else if (day) {
+            // Обычные дни
+            styles.push({ backgroundColor: colors.background.secondary });
         }
 
         return styles;
@@ -107,6 +116,23 @@ const DayItem: React.FC<DayItemProps> = ({
 
         if (!day) {
             styles.push(modalStyles.emptyDayText);
+        }
+
+        // Добавляем базовый цвет текста в зависимости от темы
+        if (day) {
+            if (isStartDate || isEndDate) {
+                // Для выбранных дней оставляем белый текст
+                styles.push({ color: 'white' });
+            } else if (isInRange) {
+                // Для дней в диапазоне используем цвет темы
+                styles.push({ color: colors.text.primary });
+            } else if (isToday) {
+                // Для сегодняшнего дня используем цвет темы
+                styles.push({ color: colors.text.primary });
+            } else {
+                // Для обычных дней: серый в светлой теме, светлый в темной
+                styles.push({ color: isDark ? colors.text.primary : '#6b7280' });
+            }
         }
 
         return styles;
@@ -136,6 +162,8 @@ const CalendarModal: React.FC<CalendarModalProps> = ({
     currentLanguage
 }) => {
     const { t } = useTranslation();
+    const { colors, isDark } = useTheme();
+
     const modalTitle = title || t('filters:selectDateRange');
     const [selectedDateRange, setSelectedDateRange] = React.useState<DateRange>(
         initialDateRange || { startDate: null, endDate: null }
@@ -175,6 +203,7 @@ const CalendarModal: React.FC<CalendarModalProps> = ({
         const monthIndex = date.getMonth();
         const year = date.getFullYear();
         const lang = currentLanguage as keyof typeof translations.months;
+
         const monthName = translations.months[lang]?.[monthIndex] ||
             translations.months.en[monthIndex];
         return `${monthName} ${year}`;
@@ -304,6 +333,7 @@ const CalendarModal: React.FC<CalendarModalProps> = ({
 
     // Получаем переводы дней недели для текущего языка
     const lang = currentLanguage as keyof typeof translations.weekDays;
+
     const weekDays: string[] = translations.weekDays[lang] || translations.weekDays.en;
 
     return (
@@ -313,37 +343,47 @@ const CalendarModal: React.FC<CalendarModalProps> = ({
             presentationStyle="pageSheet"
             onRequestClose={onClose}
         >
-            <SafeAreaView style={modalStyles.container}>
+            <SafeAreaView style={[modalStyles.container, { backgroundColor: colors.background.primary }]}>
                 {/* Header */}
-                <View style={modalStyles.header}>
+                <View style={[modalStyles.header, { backgroundColor: colors.background.primary }]}>
                     <TouchableOpacity onPress={onClose} style={modalStyles.closeButton}>
-                        <Ionicons name="close" size={24} color="#6b7280" />
+                        <Ionicons name="close" size={24} color={colors.text.secondary} />
                     </TouchableOpacity>
-                    <Text style={modalStyles.title}>{modalTitle}</Text>
+                    <Text style={[modalStyles.title, { color: colors.text.primary }]}>{modalTitle}</Text>
                     <View style={modalStyles.placeholder} />
                 </View>
 
-                <ScrollView style={modalStyles.scrollView} showsVerticalScrollIndicator={false}>
+                <ScrollView style={[modalStyles.scrollView, { backgroundColor: colors.background.primary }]} showsVerticalScrollIndicator={false}>
                     {/* Calendar */}
-                    <View style={modalStyles.calendarContainer}>
+                    <View style={[
+                        modalStyles.calendarContainer,
+                        {
+                            backgroundColor: colors.background.card,
+                            shadowColor: isDark ? "transparent" : "#000",
+                            shadowOffset: isDark ? { width: 0, height: 0 } : { width: 0, height: 2 },
+                            shadowOpacity: isDark ? 0 : 0.05,
+                            shadowRadius: isDark ? 0 : 8,
+                            elevation: isDark ? 0 : 2,
+                        }
+                    ]}>
                         {/* Навигация по месяцам */}
                         <View style={modalStyles.calendarHeader}>
                             <TouchableOpacity
-                                style={modalStyles.navButton}
+                                style={[modalStyles.navButton, { backgroundColor: colors.background.secondary }]}
                                 onPress={previousMonth}
                                 activeOpacity={0.7}
                             >
-                                <Text style={modalStyles.navButtonText}>←</Text>
+                                <Text style={[modalStyles.navButtonText, { color: colors.text.primary }]}>←</Text>
                             </TouchableOpacity>
 
-                            <Text style={modalStyles.monthYear}>{formatMonthYear(currentMonth)}</Text>
+                            <Text style={[modalStyles.monthYear, { color: colors.text.primary }]}>{formatMonthYear(currentMonth)}</Text>
 
                             <TouchableOpacity
-                                style={modalStyles.navButton}
+                                style={[modalStyles.navButton, { backgroundColor: colors.background.secondary }]}
                                 onPress={nextMonth}
                                 activeOpacity={0.7}
                             >
-                                <Text style={modalStyles.navButtonText}>→</Text>
+                                <Text style={[modalStyles.navButtonText, { color: colors.text.primary }]}>→</Text>
                             </TouchableOpacity>
                         </View>
 
@@ -351,7 +391,7 @@ const CalendarModal: React.FC<CalendarModalProps> = ({
                         <View style={modalStyles.weekDaysContainer}>
                             {weekDays.map((day: string, index: number) => (
                                 <View key={index} style={modalStyles.weekDayItem}>
-                                    <Text style={modalStyles.weekDayText}>{day}</Text>
+                                    <Text style={[modalStyles.weekDayText, { color: colors.text.secondary }]}>{day}</Text>
                                 </View>
                             ))}
                         </View>
@@ -375,18 +415,23 @@ const CalendarModal: React.FC<CalendarModalProps> = ({
                 </ScrollView>
 
                 {/* Action Buttons */}
-                <View style={modalStyles.buttonsContainer}>
+                <View style={[modalStyles.buttonsContainer, { backgroundColor: colors.background.primary }]}>
                     <TouchableOpacity
-                        style={[modalStyles.button, modalStyles.clearButton]}
+                        style={[
+                            modalStyles.button,
+                            modalStyles.clearButton,
+                            { backgroundColor: colors.background.secondary }
+                        ]}
                         onPress={handleClear}
                         activeOpacity={0.7}
                     >
-                        <Text style={modalStyles.clearButtonText}>{t('filters:clear')}</Text>
+                        <Text style={[modalStyles.clearButtonText, { color: colors.text.primary }]}>{t('filters:clear')}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={[
                             modalStyles.button,
                             modalStyles.applyButton,
+                            { backgroundColor: colors.primary[500] },
                             !canApply && modalStyles.disabledButton
                         ]}
                         onPress={handleApply}
@@ -444,7 +489,6 @@ interface ModalStyles {
 const modalStyles = StyleSheet.create<ModalStyles>({
     container: {
         flex: 1,
-        backgroundColor: '#f5f5f5',
     },
     header: {
         flexDirection: 'row',
@@ -452,74 +496,61 @@ const modalStyles = StyleSheet.create<ModalStyles>({
         justifyContent: 'space-between',
         paddingHorizontal: 20,
         paddingVertical: 16,
-        backgroundColor: 'white',
         borderBottomWidth: 1,
         borderBottomColor: '#e5e7eb',
     },
     closeButton: {
-        padding: 4,
+        padding: 8,
+        borderRadius: 8,
     },
     title: {
         fontSize: 18,
         fontWeight: '600',
-        color: '#111827',
     },
     placeholder: {
-        width: 32,
+        width: 40,
     },
     scrollView: {
         flex: 1,
     },
     calendarContainer: {
-        backgroundColor: 'white',
         margin: 20,
         borderRadius: 16,
-        padding: 16,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.05,
-        shadowRadius: 8,
-        elevation: 2,
+        padding: 20,
     },
     calendarHeader: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
         alignItems: 'center',
+        justifyContent: 'space-between',
         marginBottom: 20,
     },
     navButton: {
-        backgroundColor: '#6366f1',
         width: 40,
         height: 40,
         borderRadius: 20,
-        justifyContent: 'center',
         alignItems: 'center',
+        justifyContent: 'center',
     },
     navButtonText: {
-        color: '#fff',
         fontSize: 18,
-        fontWeight: 'bold',
+        fontWeight: '600',
     },
     monthYear: {
         fontSize: 18,
         fontWeight: '600',
-        color: '#333',
-        textAlign: 'center',
-        flex: 1,
     },
     weekDaysContainer: {
         flexDirection: 'row',
-        paddingVertical: 10,
-        marginBottom: 10,
+        marginBottom: 16,
     },
     weekDayItem: {
-        width: '14.28571%',
+        flex: 1,
         alignItems: 'center',
+        paddingVertical: 8,
     },
     weekDayText: {
         fontSize: 14,
-        fontWeight: '600',
-        color: '#666',
+        fontWeight: '500',
     },
     calendarGrid: {
         flexDirection: 'row',
@@ -528,36 +559,33 @@ const modalStyles = StyleSheet.create<ModalStyles>({
     dayItem: {
         width: '13.6%',
         aspectRatio: 1,
-        justifyContent: 'center',
         alignItems: 'center',
+        justifyContent: 'center',
         margin: 1,
         borderRadius: 8,
     },
     rangeBoundary: {
-        backgroundColor: '#6366f1',
+        // Цвет фона теперь применяется динамически
     },
     inRange: {
-        backgroundColor: '#E0E7FF',
+        // Цвет фона теперь применяется динамически
     },
     today: {
-        backgroundColor: '#10b981',
+        // Цвет фона теперь применяется динамически
     },
     dayText: {
         fontSize: 16,
-        color: '#333',
-        fontWeight: '500',
+        fontWeight: "500",
     },
     rangeBoundaryText: {
-        color: '#fff',
-        fontWeight: 'bold',
+        color: "white",
+        fontWeight: "600",
     },
     inRangeText: {
-        color: '#4338ca',
-        fontWeight: '600',
+        fontWeight: "500",
     },
     todayText: {
-        color: '#fff',
-        fontWeight: 'bold',
+        fontWeight: "600",
     },
     emptyDayText: {
         color: 'transparent',
@@ -565,34 +593,31 @@ const modalStyles = StyleSheet.create<ModalStyles>({
     buttonsContainer: {
         flexDirection: 'row',
         paddingHorizontal: 20,
-        paddingBottom: 20,
+        paddingVertical: 16,
         gap: 12,
-        backgroundColor: 'white',
         borderTopWidth: 1,
         borderTopColor: '#e5e7eb',
-        paddingTop: 20,
     },
     button: {
         flex: 1,
         paddingVertical: 16,
         borderRadius: 12,
         alignItems: 'center',
+        justifyContent: 'center',
     },
     clearButton: {
-        backgroundColor: 'white',
         borderWidth: 1,
         borderColor: '#d1d5db',
     },
     applyButton: {
-        backgroundColor: '#6366f1',
+        borderWidth: 0,
     },
     disabledButton: {
-        backgroundColor: '#9ca3af',
+        opacity: 0.5,
     },
     clearButtonText: {
         fontSize: 16,
         fontWeight: '600',
-        color: '#374151',
     },
     applyButtonText: {
         fontSize: 16,
@@ -600,8 +625,9 @@ const modalStyles = StyleSheet.create<ModalStyles>({
         color: 'white',
     },
     disabledButtonText: {
-        color: '#e5e7eb',
+        color: '#9ca3af',
     },
 });
 
 export { CalendarModal, type DateRange };
+

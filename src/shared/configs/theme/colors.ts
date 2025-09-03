@@ -3,7 +3,7 @@ export const Colors = {
   // Primary Brand Colors
   primary: {
     50: '#f0f8ff',
-    100: '#e0f2fe', 
+    100: '#e0f2fe',
     200: '#bae6fd',
     300: '#7dd3fc',
     400: '#38bdf8',
@@ -89,12 +89,18 @@ export const Colors = {
   black: '#000000',
   transparent: 'transparent',
 
+  // Dark Theme Base Colors
+  darkBackground: '#1A1A1A',
+  darkElements: '#0C0C0C',
+  darkBorder: '#1A1A1A',
+
   // App Specific Colors
   background: {
     primary: '#ffffff',
     secondary: '#f8fafc',
     tertiary: '#f1f5f9',
     dark: '#000000',
+    card: "#ffffff"
   },
 
   text: {
@@ -133,10 +139,11 @@ export const Colors = {
 export const DarkColors = {
   ...Colors,
   background: {
-    primary: '#111827',
+    primary: '#1A1A1A',
     secondary: '#1f2937',
     tertiary: '#374151',
     dark: '#000000',
+    card: "#0D0D0D"
   },
   text: {
     primary: '#f9fafb',
@@ -145,6 +152,7 @@ export const DarkColors = {
     inverse: '#111827',
     disabled: '#6b7280',
   },
+  darkBorder: '#1A1A1A',
 };
 
 // Helper function to get colors based on theme

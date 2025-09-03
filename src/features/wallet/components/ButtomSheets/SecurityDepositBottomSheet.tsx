@@ -1,4 +1,5 @@
 import { CustomIconComponent } from "@/shared/assets/icons/settings/CustomIconComponent";
+import { useTheme } from "@/shared/configs/context/ThemeContext";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -36,6 +37,7 @@ const DepositConfirmationBottomSheet = ({
   isLoading: boolean;
 }) => {
   const { t } = useTranslation();
+  const { colors } = useTheme();
 
   return (
     <BottomSheet
@@ -45,11 +47,11 @@ const DepositConfirmationBottomSheet = ({
       height={100 * 3.2}
     >
       <View style={styles.confirmationContent}>
-        <Text style={styles.confirmationTitle}>
+        <Text style={[styles.confirmationTitle, { color: colors.text.primary }]}>
           {t("wallet:sureDeposit", { amount: `${amount} с` })}
         </Text>
 
-        <Text style={styles.confirmationDescription}>
+        <Text style={[styles.confirmationDescription, { color: colors.text.secondary }]}>
           {t("wallet:depositBenefits")}
         </Text>
 
@@ -82,6 +84,7 @@ const DepositSuccessBottomSheet = ({
   newTotalDeposit: string;
 }) => {
   const { t } = useTranslation();
+  const { colors } = useTheme();
 
   return (
     <BottomSheet
@@ -95,7 +98,7 @@ const DepositSuccessBottomSheet = ({
 
 
         {/* Описание */}
-        <Text style={styles.successDescription}>
+        <Text style={[styles.successDescription, { color: colors.text.secondary }]}>
           {t("wallet:depositSuccessDescription")}
         </Text>
         <View style={styles.successIcon}>
@@ -123,6 +126,7 @@ export default function SecurityDepositBottomSheet({
   onDeposit,
 }: SecurityDepositBottomSheetProps) {
   const { t } = useTranslation();
+  const { colors, isDark } = useTheme();
   const [depositAmount, setDepositAmount] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -246,35 +250,45 @@ export default function SecurityDepositBottomSheet({
         title={t("wallet:securityDeposit")}
       >
         <TouchableWithoutFeedback onPress={handleDismissKeyboard}>
-          <View style={styles.bottomSheetContent}>
+          <View style={[styles.bottomSheetContent, { backgroundColor: colors.background.primary }]}>
 
             <View style={styles.inputContainer}>
-              <Text style={styles.inputLabel}>
+              <Text style={[styles.inputLabel, { color: colors.text.primary }]}>
                 {t("wallet:enterDepositAmount")}
               </Text>
 
               <View style={[
                 styles.inputWrapper,
+                {
+                  backgroundColor: colors.background.card,
+                  borderColor: error ? '#ef4444' : colors.border.light,
+                  shadowColor: isDark ? "transparent" : "#000",
+                  shadowOffset: isDark ? { width: 0, height: 0 } : { width: 0, height: 2 },
+                  shadowOpacity: isDark ? 0 : 0.05,
+                  shadowRadius: isDark ? 0 : 8,
+                  elevation: isDark ? 0 : 2,
+                },
                 error && styles.inputWrapperError
               ]}>
                 <TextInput
                   style={[
                     styles.input,
+                    { color: colors.text.primary },
                     error && styles.inputError
                   ]}
                   value={depositAmount}
                   onChangeText={handleAmountChange}
                   keyboardType="numeric"
                   placeholder="0"
-                  placeholderTextColor="#9ca3af"
+                  placeholderTextColor={colors.text.secondary}
                   returnKeyType="done"
                   onSubmitEditing={handleDismissKeyboard}
                   autoFocus={false}
                 />
-                <Text style={styles.currency}>с</Text>
+                <Text style={[styles.currency, { color: colors.text.secondary }]}>с</Text>
 
                 <TouchableOpacity
-                  style={styles.recommendedButton}
+                  style={[styles.recommendedButton, { backgroundColor: colors.primary[500] }]}
                   onPress={handleSetRecommended}
                 >
                   <Text style={styles.recommendedButtonText}>
@@ -288,15 +302,25 @@ export default function SecurityDepositBottomSheet({
               ) : null}
             </View>
             {/* Текущий депозит */}
-            <View style={styles.currentDepositInfo}>
-              <Ionicons name="shield-outline" size={20} color="#6366f1" />
-              <Text style={styles.currentDepositText}>
+            <View style={[
+              styles.currentDepositInfo,
+              {
+                backgroundColor: colors.background.card,
+                shadowColor: isDark ? "transparent" : "#000",
+                shadowOffset: isDark ? { width: 0, height: 0 } : { width: 0, height: 2 },
+                shadowOpacity: isDark ? 0 : 0.05,
+                shadowRadius: isDark ? 0 : 8,
+                elevation: isDark ? 0 : 2,
+              }
+            ]}>
+              <Ionicons name="shield-outline" size={20} color={colors.primary[500]} />
+              <Text style={[styles.currentDepositText, { color: colors.text.secondary }]}>
                 {t("wallet:currentDeposit")}: {currentDeposit} с
               </Text>
             </View>
 
             <View>
-              <Text style={styles.depositDescription}>
+              <Text style={[styles.depositDescription, { color: colors.text.secondary }]}>
                 {t("wallet:depositDescription")}
               </Text>
             </View>
@@ -307,6 +331,7 @@ export default function SecurityDepositBottomSheet({
             <TouchableOpacity
               style={[
                 styles.bottomSheetButton,
+                { backgroundColor: colors.primary[500] },
                 !isValidAmount && styles.disabledButton
               ]}
               onPress={handleContinue}
@@ -350,7 +375,6 @@ const styles = StyleSheet.create({
   currentDepositInfo: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#f8fafc",
     padding: 16,
     borderRadius: 12,
     marginBottom: 20,
@@ -358,7 +382,6 @@ const styles = StyleSheet.create({
   currentDepositText: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#374151",
     marginLeft: 8,
   },
   inputContainer: {
@@ -366,24 +389,22 @@ const styles = StyleSheet.create({
   },
   depositDescription: {
     fontSize: 14,
-    color: "#6b7280",
     marginBottom: 20,
     lineHeight: 20,
   },
   inputLabel: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#374151",
     marginBottom: 8,
   },
   inputWrapper: {
     flexDirection: "row",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "#e5e7eb",
     borderRadius: 12,
-    backgroundColor: "#fff",
     paddingHorizontal: 16,
+    paddingVertical: 12,
+    marginBottom: 8,
   },
   inputWrapperError: {
     borderColor: "#ef4444",
@@ -393,7 +414,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "600",
     paddingVertical: 16,
-    color: "#111827",
   },
   inputError: {
     color: "#ef4444",
@@ -401,11 +421,9 @@ const styles = StyleSheet.create({
   currency: {
     fontSize: 16,
     fontWeight: "500",
-    color: "#6b7280",
     marginRight: 12,
   },
   recommendedButton: {
-    backgroundColor: "#10b981",
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 8,
@@ -424,14 +442,12 @@ const styles = StyleSheet.create({
   depositInfoCard: {
     flexDirection: "row",
     alignItems: "flex-start",
-    backgroundColor: "#f0f9ff",
     padding: 12,
     borderRadius: 8,
     marginBottom: 20,
   },
   depositInfoCardText: {
     fontSize: 14,
-    color: "#6b7280",
     marginLeft: 8,
     lineHeight: 20,
     flex: 1,
@@ -444,15 +460,12 @@ const styles = StyleSheet.create({
   },
   recommendedLabel: {
     fontSize: 16,
-    color: "#374151",
   },
   recommendedAmount: {
     fontSize: 18,
     fontWeight: "600",
-    color: "#10b981",
   },
   bottomSheetButton: {
-    backgroundColor: "#6366f1",
     borderRadius: 12,
     padding: 16,
     alignItems: "center",
@@ -476,13 +489,11 @@ const styles = StyleSheet.create({
   confirmationTitle: {
     fontSize: 18,
     fontWeight: "600",
-    color: "#111827",
     textAlign: "center",
     marginBottom: 16,
   },
   confirmationDescription: {
     fontSize: 14,
-    color: "#6b7280",
     textAlign: "center",
     marginBottom: 20,
     lineHeight: 20,
@@ -529,19 +540,16 @@ const styles = StyleSheet.create({
   successTitle: {
     fontSize: 20,
     fontWeight: "600",
-    color: "#111827",
     textAlign: "center",
     marginBottom: 12,
   },
   successDescription: {
     fontSize: 14,
-    color: "#6b7280",
     textAlign: "center",
     marginBottom: 24,
     lineHeight: 20,
   },
   depositDetails: {
-    backgroundColor: "#f8fafc",
     borderRadius: 12,
     padding: 16,
     width: "100%",
@@ -555,17 +563,14 @@ const styles = StyleSheet.create({
   },
   detailLabel: {
     fontSize: 14,
-    color: "#6b7280",
   },
   detailValue: {
     fontSize: 14,
     fontWeight: "600",
-    color: "#111827",
   },
   detailValuePositive: {
     fontSize: 14,
     fontWeight: "600",
-    color: "#10b981",
   },
   statusBadgeActive: {
     backgroundColor: "#10b981",
@@ -581,7 +586,6 @@ const styles = StyleSheet.create({
   infoBox: {
     flexDirection: "row",
     alignItems: "flex-start",
-    backgroundColor: "#f0fdf4",
     padding: 12,
     borderRadius: 8,
     width: "100%",
@@ -589,7 +593,6 @@ const styles = StyleSheet.create({
   },
   infoText: {
     fontSize: 14,
-    color: "#10b981",
     marginLeft: 8,
     lineHeight: 20,
     flex: 1,

@@ -26,7 +26,7 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
           key={lang.code}
           style={[
             styles.languageButton,
-            currentLanguage === lang.code && { backgroundColor: colors.primary[500] },
+            { backgroundColor: currentLanguage === lang.code ? colors.primary[500] : 'transparent' },
           ]}
           onPress={() => changeLanguage(lang.code as any)}
         >

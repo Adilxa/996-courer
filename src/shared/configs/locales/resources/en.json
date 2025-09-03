@@ -8,7 +8,8 @@
     "login": "Login",
     "logout": "Logout",
     "all": "All",
-    "apply": "Apply"
+    "apply": "Apply",
+    "understood": "Understood"
   },
   "header": {
     "logo": "996.kg"
@@ -41,7 +42,12 @@
       "sunday": "Sunday"
     },
     "closed": "Closed",
-    "onSince": "On 996.kg since"
+    "onSince": "On 996.kg since",
+    "applications": "Applications",
+    "income": "Income",
+    "applicationsAmount": "Number of applications",
+    "applicationsDone": "Completed orders",
+    "createdAt": "On 996.kg since"
   },
   "menu": {
     "location": "Bishkek",
@@ -91,6 +97,13 @@
     "arrivalDate": "Arrival date:",
     "statusLabel": "Status:"
   },
+  "ordersScreen": {
+    "title": "Orders",
+    "titleNearby": "Nearby Orders",
+    "determining": "Determining...",
+    "startWork": "Start Work",
+    "endWork": "End Work"
+  },
   "orderCard": {
     "restaurant": "Restaurant",
     "orderNumber": "order number:",
@@ -104,7 +117,34 @@
     "additionalInfo": "Additional Information",
     "phone": "Phone:",
     "location": "Location:",
-    "orderNotFound": "Order not found"
+    "orderNotFound": "Order not found",
+    "map": "View Route",
+    "orderNumberLabel": "Order Number",
+    "orderItems": "Order Items",
+    "support": {
+      "title": "Support",
+      "subtitle": "If you have problems with your order"
+    },
+    "sos": {
+      "title": "SOS",
+      "subtitle": "If you are in trouble"
+    },
+    "items": {
+      "frenchFries": "French Fries",
+      "doubleChickenCheeseburger": "Double Chicken Cheeseburger",
+      "cola1l": "Cola 1L"
+    },
+    "itemCount": "3 items",
+    "totalAmount": "960 C",
+    "mapDetail": {
+      "from": "From",
+      "to": "To",
+      "viewRoute": "View Route",
+      "start": "Start",
+      "myLocation": "My location",
+      "destination": "Destination",
+      "departurePoint": "Departure point"
+    }
   },
   "schedule": {
     "title": "Edit Work Schedule",
@@ -179,7 +219,32 @@
     "servicePayment": "Service Payment",
     "enterOrderNumber": "Enter Order Number",
     "orderNumberPlaceholder": "№123456789",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "confirmationTitle": "Confirmation",
+    "sureWithdrawal": "Are you sure you want to withdraw {{amount}}?",
+    "sureDeposit": "Are you sure you want to reserve {{amount}}?",
+    "withdrawDescription": "The withdrawal request will be processed within 24 hours",
+    "depositBenefits": "Security deposit provides additional protection for your transactions",
+    "requestCreated": "Request Created",
+    "requestDescription": "Your withdrawal request has been successfully created and is being processed",
+    "depositSuccessDescription": "Your security deposit has been successfully reserved",
+    "enterDepositAmount": "Enter deposit amount",
+    "enterWithdrawAmount": "Enter withdrawal amount",
+    "currentDeposit": "Current deposit",
+    "depositDescription": "Security deposit is a guarantee of your reliability as a seller",
+    "withdrawalConfirmation": "Withdrawal Confirmation",
+    "withdrawalProcessingInfo": "Withdrawal processing takes 24 hours",
+    "acceptWithdrawalTerms": "I accept the withdrawal terms and conditions",
+    "errors": {
+      "enterAmount": "Please enter amount",
+      "invalidAmount": "Invalid amount",
+      "minimumDeposit": "Minimum deposit amount: {{amount}}",
+      "minimumWithdrawal": "Minimum withdrawal amount: {{amount}}",
+      "insufficientFunds": "Insufficient funds",
+      "depositFailed": "Deposit failed",
+      "withdrawalFailed": "Withdrawal failed",
+      "mustAcceptTerms": "You must accept the terms"
+    }
   },
   "scanner": {
     "title": "Scanner",

@@ -8,7 +8,8 @@
     "login": "Кируу",
     "logout": "Чыгуу",
     "all": "Баары",
-    "apply": "Колдонуу"
+    "apply": "Колдонуу",
+    "understood": "Түшүндүм"
   },
   "header": {
     "logo": "996.kg"
@@ -41,7 +42,12 @@
       "sunday": "Жекшемби"
     },
     "closed": "Эс алуу күнү",
-    "onSince": "996.kg'де"
+    "onSince": "996.kg'де",
+    "applications": "Заказдар",
+    "income": "Киреше",
+    "applicationsAmount": "Заказдардын саны",
+    "applicationsDone": "Аякталган заказдар",
+    "createdAt": "996.kg'де"
   },
   "menu": {
     "location": "Бишкек",
@@ -91,6 +97,13 @@
     "arrivalDate": "Келүү датасы:",
     "statusLabel": "Статус:"
   },
+  "ordersScreen": {
+    "title": "Заказдар",
+    "titleNearby": "Жакынкы заказдар",
+    "determining": "Аныктап жатабыз...",
+    "startWork": "Ишти баштоо",
+    "endWork": "Ишти аяктоо"
+  },
   "orderCard": {
     "restaurant": "Ресторан",
     "orderNumber": "заказ номери:",
@@ -104,7 +117,34 @@
     "additionalInfo": "Кошумча маалымат",
     "phone": "Телефон:",
     "location": "Жайгашкан жери:",
-    "orderNotFound": "Заказ табылган жок"
+    "orderNotFound": "Заказ табылган жок",
+    "map": "Маршрутты көрүү",
+    "orderNumberLabel": "Заказ номери",
+    "orderItems": "Заказдын курамы",
+    "support": {
+      "title": "Колдоо",
+      "subtitle": "Эгерде заказ менен көйгөй болсо"
+    },
+    "sos": {
+      "title": "SOS",
+      "subtitle": "Эгерде сиз кыйынчылыкта болсоңуз"
+    },
+    "items": {
+      "frenchFries": "Картошка фри",
+      "doubleChickenCheeseburger": "Эки чизбургер тоок эт менен",
+      "cola1l": "Кола 1 л."
+    },
+    "itemCount": "3 позиция",
+    "totalAmount": "960 С",
+    "mapDetail": {
+      "from": "Качан",
+      "to": "Кайда",
+      "viewRoute": "Маршрутты көрүү",
+      "start": "Баштоо",
+      "myLocation": "Менин жайгашкан жерим",
+      "destination": "Жетүү чекити",
+      "departurePoint": "Жөнөтүү чекити"
+    }
   },
   "schedule": {
     "title": "Иш графигин оңдоо",
@@ -179,7 +219,32 @@
     "servicePayment": "Кызмат төлөмү",
     "enterOrderNumber": "Заказ номерин киргизиңиз",
     "orderNumberPlaceholder": "№123456789",
-    "confirm": "Ырастоо"
+    "confirm": "Ырастоо",
+    "confirmationTitle": "Ырастоо",
+    "sureWithdrawal": "Сиз чын эле {{amount}} алууну каалайсызбы?",
+    "sureDeposit": "Сиз чын эле {{amount}} резервге алууну каалайсызбы?",
+    "withdrawDescription": "Акча алуу сурамы 24 саат ичинде иштетилет",
+    "depositBenefits": "Коопсуздук депозити сиздин транзакцияларыңызга кошумча коргоо берет",
+    "requestCreated": "Сурам түзүлдү",
+    "requestDescription": "Сиздин акча алуу сурамы ийгиликтүү түзүлдү жана иштетилүүдө",
+    "depositSuccessDescription": "Сиздин коопсуздук депозити ийгиликтүү резервге алынды",
+    "enterDepositAmount": "Депозит суммасын киргизиңиз",
+    "enterWithdrawAmount": "Акча алуу суммасын киргизиңиз",
+    "currentDeposit": "Учурдагы депозит",
+    "depositDescription": "Коопсуздук депозити - сатуучу катары сиздин ишенимдүүлүгүңүздүн кепилдиги",
+    "withdrawalConfirmation": "Акча алууну ырастоо",
+    "withdrawalProcessingInfo": "Акча алуу 24 саат ичинде иштетилет",
+    "acceptWithdrawalTerms": "Мен акча алуу шарттарын кабыл алам",
+    "errors": {
+      "enterAmount": "Сураныч, сумманы киргизиңиз",
+      "invalidAmount": "Жараксыз сумма",
+      "minimumDeposit": "Минималдуу депозит суммасы: {{amount}}",
+      "minimumWithdrawal": "Минималдуу акча алуу суммасы: {{amount}}",
+      "insufficientFunds": "Жетишсиз акча",
+      "depositFailed": "Депозит ийгиликсиз болду",
+      "withdrawalFailed": "Акча алуу ийгиликсиз болду",
+      "mustAcceptTerms": "Сиз шарттарды кабыл алышыңыз керек"
+    }
   },
   "scanner": {
     "title": "Сканер",

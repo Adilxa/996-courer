@@ -1,5 +1,6 @@
 import { SafeAreaScreenComponent } from "@/shared/components";
 import { CustomHeaderComponent } from "@/shared/components/layout/CustomHeaderComponent/CustomHeaderComponent";
+import { useTheme } from "@/shared/configs/context/ThemeContext";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -12,6 +13,7 @@ import {
 
 export default function ManualScannerScreen() {
   const { t } = useTranslation();
+  const { colors, isDark } = useTheme();
   const [orderNumber, setOrderNumber] = useState("");
 
   const handleConfirm = () => {
@@ -23,22 +25,30 @@ export default function ManualScannerScreen() {
 
   return (
     <SafeAreaScreenComponent
-      backgroundColor="#ffffff"
-      statusBarStyle="dark-content"
+      backgroundColor={colors.background.primary}
+      statusBarStyle={isDark ? "light-content" : "dark-content"}
     >
       <CustomHeaderComponent />
 
       {/* Content */}
-      <View style={styles.content}>
-        <Text style={styles.title}>{t("scanner:enterOrderNumber")}</Text>
+      <View style={[styles.content, { backgroundColor: colors.background.primary }]}>
+        <Text style={[styles.title, { color: colors.text.primary }]}>{t("scanner:enterOrderNumber")}</Text>
 
         <View style={styles.inputContainer}>
           <TextInput
-            style={styles.input}
+            style={[
+              styles.input,
+              {
+                backgroundColor: colors.background.card,
+                color: colors.text.primary,
+                borderColor: isDark ? colors.darkBorder : "#e5e7eb",
+                borderWidth: 1,
+              }
+            ]}
             value={orderNumber}
             onChangeText={setOrderNumber}
             placeholder={t("scanner:orderNumberPlaceholder")}
-            placeholderTextColor="#9ca3af"
+            placeholderTextColor={colors.text.secondary}
             keyboardType="numeric"
             autoFocus
           />
@@ -47,7 +57,11 @@ export default function ManualScannerScreen() {
         <TouchableOpacity
           style={[
             styles.confirmButton,
-            !orderNumber.trim() && styles.disabledButton,
+            { backgroundColor: colors.primary[500] },
+            !orderNumber.trim() && [
+              styles.disabledButton,
+              { backgroundColor: isDark ? colors.darkElements : "#f3f4f6" }
+            ],
           ]}
           onPress={handleConfirm}
           disabled={!orderNumber.trim()}
@@ -55,7 +69,10 @@ export default function ManualScannerScreen() {
           <Text
             style={[
               styles.confirmButtonText,
-              !orderNumber.trim() && styles.disabledButtonText,
+              !orderNumber.trim() && [
+                styles.disabledButtonText,
+                { color: colors.text.secondary }
+              ],
             ]}
           >
             {t("scanner:confirm")}
@@ -85,7 +102,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 18,
     fontWeight: "600",
-    color: "#111827",
+    // color теперь применяется динамически
   },
   placeholder: {
     width: 40,
@@ -95,11 +112,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 60,
     alignItems: "center",
+    // backgroundColor теперь применяется динамически
   },
   title: {
     fontSize: 24,
     fontWeight: "600",
-    color: "#111827",
+    // color теперь применяется динамически
     marginBottom: 40,
     textAlign: "center",
   },
@@ -108,21 +126,20 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   input: {
-    backgroundColor: "#ffffff",
     borderRadius: 12,
     paddingHorizontal: 20,
     paddingVertical: 16,
     fontSize: 18,
     textAlign: "center",
-    color: "#111827",
+    // backgroundColor, color и borderColor теперь применяются динамически
   },
   confirmButton: {
-    backgroundColor: "#6366f1",
     paddingHorizontal: 40,
     paddingVertical: 16,
     borderRadius: 25,
     minWidth: 200,
     alignItems: "center",
+    // backgroundColor теперь применяется динамически
   },
   confirmButtonText: {
     fontSize: 18,
@@ -130,9 +147,9 @@ const styles = StyleSheet.create({
     color: "#ffffff",
   },
   disabledButton: {
-    backgroundColor: "#f3f4f6",
+    // backgroundColor теперь применяется динамически
   },
   disabledButtonText: {
-    color: "#9ca3af",
+    // color теперь применяется динамически
   },
 });

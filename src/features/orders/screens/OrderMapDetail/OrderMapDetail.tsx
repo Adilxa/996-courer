@@ -1,9 +1,11 @@
 import { NotificationModal } from "@/features/notifications/screens/NotificationModal";
 import { CustomIconComponent } from "@/shared/assets/icons/settings/CustomIconComponent";
 import { BurgerMenuComponent, CustomHeaderComponent, SafeAreaScreenComponent } from "@/shared/components";
+import { useTheme } from "@/shared/configs/context/ThemeContext";
 import { Ionicons } from "@expo/vector-icons";
 import * as Location from 'expo-location';
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Dimensions, Linking, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE, Polyline } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
@@ -22,6 +24,9 @@ interface LocationCoords {
 }
 
 const OrderMapDetail = ({ orderId }: OrderMapDetailProps) => {
+    const { colors, isDark } = useTheme();
+    const { t } = useTranslation();
+
     const mockData = {
         from: "Моё местоположение",
         to: "улица Ахунбаев, 28",
@@ -133,7 +138,7 @@ const OrderMapDetail = ({ orderId }: OrderMapDetailProps) => {
     };
 
     return (
-        <SafeAreaScreenComponent backgroundColor="white">
+        <SafeAreaScreenComponent backgroundColor={colors.background.primary}>
             {/* Header */}
             <CustomHeaderComponent
                 onNotificationPress={() => setShowNotifications(true)}
@@ -141,16 +146,26 @@ const OrderMapDetail = ({ orderId }: OrderMapDetailProps) => {
             />
 
             <ScrollView
-                style={styles.scrollView}
+                style={[styles.scrollView, { backgroundColor: colors.background.primary }]}
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={styles.scrollViewContent}
             >
                 {/* Route Information Block */}
-                <View style={styles.routeContainer}>
+                <View style={[
+                    styles.routeContainer,
+                    {
+                        backgroundColor: colors.background.card,
+                        shadowColor: isDark ? "transparent" : "#000",
+                        shadowOffset: isDark ? { width: 0, height: 0 } : { width: 0, height: 2 },
+                        shadowOpacity: isDark ? 0 : 0.1,
+                        shadowRadius: isDark ? 0 : 4,
+                        elevation: isDark ? 0 : 3,
+                    }
+                ]}>
                     {/* Route Info */}
-                    <View style={styles.routeInfo}>
-                        <Text style={styles.routeFromText}>Откуда: {mockData.from}</Text>
-                        <Text style={styles.routeToText}>Куда: {mockData.to}</Text>
+                    <View style={[styles.routeInfo, { borderBottomColor: isDark ? colors.darkBorder : '#e9ecef' }]}>
+                        <Text style={[styles.routeFromText, { color: colors.text.secondary }]}>{t("orderDetail:mapDetail:from")}: {mockData.from}</Text>
+                        <Text style={[styles.routeToText, { color: colors.text.primary }]}>{t("orderDetail:mapDetail:to")}: {mockData.to}</Text>
                     </View>
 
                     {/* Transport Options */}
@@ -160,9 +175,9 @@ const OrderMapDetail = ({ orderId }: OrderMapDetailProps) => {
                                 <CustomIconComponent
                                     name={item.type}
                                     size={28}
-                                    color="#333"
+                                    color={isDark ? colors.text.primary : "#333"}
                                 />
-                                <Text style={styles.timeText}>
+                                <Text style={[styles.timeText, { color: colors.text.secondary }]}>
                                     {mockData[item.type as keyof typeof mockData]}
                                 </Text>
                             </View>
@@ -171,7 +186,16 @@ const OrderMapDetail = ({ orderId }: OrderMapDetailProps) => {
                 </View>
 
                 {/* Map Container */}
-                <View style={styles.mapContainer}>
+                <View style={[
+                    styles.mapContainer,
+                    {
+                        shadowColor: isDark ? "transparent" : "#000",
+                        shadowOffset: isDark ? { width: 0, height: 0 } : { width: 0, height: 2 },
+                        shadowOpacity: isDark ? 0 : 0.25,
+                        shadowRadius: isDark ? 0 : 3.84,
+                        elevation: isDark ? 0 : 3,
+                    }
+                ]}>
                     <MapView
                         provider={PROVIDER_GOOGLE}
                         style={styles.map}
@@ -185,8 +209,8 @@ const OrderMapDetail = ({ orderId }: OrderMapDetailProps) => {
                         {currentLocation && (
                             <Marker
                                 coordinate={currentLocation}
-                                title="Моё местоположение"
-                                description="Точка отправления"
+                                title={t("orderDetail:mapDetail:myLocation")}
+                                description={t("orderDetail:mapDetail:departurePoint")}
                                 pinColor="blue"
                             />
                         )}
@@ -194,7 +218,7 @@ const OrderMapDetail = ({ orderId }: OrderMapDetailProps) => {
                         {/* Маркер пункта назначения */}
                         <Marker
                             coordinate={destinationLocation}
-                            title="Пункт назначения"
+                            title={t("orderDetail:mapDetail:destination")}
                             description={mockData.to}
                             pinColor="red"
                         />
@@ -236,25 +260,36 @@ const OrderMapDetail = ({ orderId }: OrderMapDetailProps) => {
                 </View>
 
                 {/* Route Distance and Duration */}
-                <View style={[styles.routeInfo, { flexDirection: 'column', alignItems: "flex-start", paddingLeft: 16, borderBottomWidth: 0, paddingBottom: 0 }]}>
-                    <Text style={styles.routeToText}>2,3 км</Text>
-                    <Text style={styles.routeFromText}>13 мин</Text>
+                <View style={[styles.routeInfo, {
+                    flexDirection: 'column',
+                    alignItems: "flex-start",
+                    paddingLeft: 16,
+                    borderBottomWidth: 0,
+                    paddingBottom: 0,
+                    borderBottomColor: isDark ? colors.darkBorder : '#e9ecef'
+                }]}>
+                    <Text style={[styles.routeToText, { color: colors.text.primary }]}>12km</Text>
+                    <Text style={[styles.routeFromText, { color: colors.text.secondary }]}>12 min</Text>
                 </View>
 
                 {/* Buttons Container */}
                 <View style={styles.buttonsContainer}>
                     <TouchableOpacity
-                        style={[styles.button, { borderColor: '#6366f1', backgroundColor: 'transparent', borderWidth: 1 }]}
+                        style={[styles.button, {
+                            borderColor: colors.primary[500],
+                            backgroundColor: 'transparent',
+                            borderWidth: 1
+                        }]}
                         onPress={openInGoogleMaps}
                     >
-                        <Ionicons name="map" size={18} color="#6366f1" />
-                        <Text style={[styles.buttonText, { color: '#6366f1' }]}>
-                            Посмотреть маршрут
+                        <Ionicons name="map" size={18} color={colors.primary[500]} />
+                        <Text style={[styles.buttonText, { color: colors.primary[500] }]}>
+                            {t("orderDetail:mapDetail:viewRoute")}
                         </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.button}>
-                        <Text style={styles.buttonText}>
-                            Начать
+                    <TouchableOpacity style={[styles.button, { backgroundColor: colors.primary[500] }]}>
+                        <Text style={[styles.buttonText, { color: colors.text.inverse }]}>
+                            {t("orderDetail:mapDetail:start")}
                         </Text>
                     </TouchableOpacity>
                 </View>

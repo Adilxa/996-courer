@@ -18,6 +18,7 @@ import {
 } from "react-native";
 import { SafeAreaScreenComponent } from "../../../../shared/components/ui";
 import { useLanguage } from "../../../../shared/configs/context/LanguageContext";
+import { useTheme } from "../../../../shared/configs/context/ThemeContext";
 import { OrderCard } from "../../components/Order-card/OrderCard";
 import { TypeSelect } from "../../components/Type-select/TypeSelect";
 import { Types, ordersNearby } from "../../constants";
@@ -30,11 +31,13 @@ interface LocationData {
 export default function OrdersMainScreen() {
   const { t } = useTranslation();
   const { currentLanguage, changeLanguage } = useLanguage();
+  const { colors, isDark } = useTheme();
 
   const [showStatusDropdown, setShowStatusDropdown] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [isLoadingLocation, setIsLoadingLocation] = useState(false);
+  const [isOnline, setIsOnline] = useState(false); // Новое состояние для онлайн режима
 
   const [selectedType, setSelectedType] = useState<Types | null>(null);
   const [geoPoint, setGeoPoint] = useState<LocationData | null>(null);
@@ -42,7 +45,15 @@ export default function OrdersMainScreen() {
   console.log(selectedType, " selected type");
   console.log(geoPoint, " current location");
 
-  const getCurrentLocation = async () => {
+  const toggleWorkMode = async () => {
+    if (isOnline) {
+      // Завершаем работу - переходим в оффлайн режим
+      setIsOnline(false);
+      setGeoPoint(null);
+      return;
+    }
+
+    // Начинаем работу - получаем местоположение и включаем онлайн режим
     setIsLoadingLocation(true);
 
     try {
@@ -66,13 +77,8 @@ export default function OrdersMainScreen() {
 
       const { latitude, longitude } = location.coords;
       setGeoPoint({ latitude, longitude });
+      setIsOnline(true); // Включаем онлайн режим
       setIsLoadingLocation(false);
-
-      Alert.alert(
-        "Местоположение получено",
-        `Широта: ${latitude.toFixed(6)}\nДолгота: ${longitude.toFixed(6)}`,
-        [{ text: "OK" }]
-      );
 
     } catch (error) {
       setIsLoadingLocation(false);
@@ -87,7 +93,7 @@ export default function OrdersMainScreen() {
   };
 
   return (
-    <SafeAreaScreenComponent backgroundColor="white">
+    <SafeAreaScreenComponent backgroundColor={colors.background.primary}>
       {/* Header */}
       <CustomHeaderComponent
         onNotificationPress={() => setShowNotifications(true)}
@@ -100,7 +106,7 @@ export default function OrdersMainScreen() {
         contentContainerStyle={styles.scrollViewContent}
       >
         {/* Title */}
-        <Text style={styles.title}>{t("ordersScreen:title")}</Text>
+        <Text style={[styles.title, { color: colors.text.primary }]}>{t("ordersScreen:title")}</Text>
 
         {/* Date Filter */}
         <TypeSelect types={selectedType} setType={setSelectedType} />
@@ -111,25 +117,38 @@ export default function OrdersMainScreen() {
 
         {/* Apply Button */}
         <TouchableOpacity
-          style={[styles.applyButton, isLoadingLocation && styles.applyButtonDisabled]}
-          onPress={getCurrentLocation}
+          style={[
+            styles.applyButton,
+            { backgroundColor: isOnline ? colors.error[500] : colors.primary[500] }, // Красная для "закончить работу", синяя для "начать работу"
+            isLoadingLocation && styles.applyButtonDisabled
+          ]}
+          onPress={toggleWorkMode}
           disabled={isLoadingLocation}
         >
           {isLoadingLocation ? (
             <ActivityIndicator size="small" color="white" />
           ) : (
-            <CustomIconComponent name="geoPoint" size={18} color="white" />
+            <CustomIconComponent
+              name={isOnline ? "close" : "geoPoint"}
+              size={18}
+              color="white"
+            />
           )}
           <Text style={styles.applyButtonText}>
-            {isLoadingLocation ? "Определяем..." : "Определить мое местоположение"}
+            {isLoadingLocation
+              ? t("ordersScreen:determining")
+              : isOnline
+                ? t("ordersScreen:endWork")
+                : t("ordersScreen:startWork")
+            }
           </Text>
         </TouchableOpacity>
 
         {/* Title nearby */}
-        <Text style={styles.title}>{t("ordersScreen:titleNearby")}</Text>
+        <Text style={[styles.title, { color: colors.text.primary }]}>{t("ordersScreen:titleNearby")}</Text>
 
-        {/* Orders List */}
-        {selectedType && (
+        {/* Orders List - показываем только когда пользователь в сети */}
+        {isOnline && selectedType && (
           <View style={styles.ordersList}>
             {ordersNearby.map((order) => (
               <OrderCard
@@ -172,12 +191,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#111827",
+    // color теперь применяется динамически
     paddingHorizontal: 20,
     paddingVertical: 16,
   },
   applyButton: {
-    backgroundColor: "#6366f1",
     marginHorizontal: 20,
     paddingVertical: 16,
     borderRadius: 100,
@@ -186,6 +204,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     gap: 8,
+    // backgroundColor теперь применяется динамически
   },
   applyButtonDisabled: {
     opacity: 0.7,
@@ -197,7 +216,7 @@ const styles = StyleSheet.create({
   },
   locationText: {
     fontSize: 14,
-    color: "#6b7280",
+    // color теперь применяется динамически
     textAlign: "center",
     marginHorizontal: 20,
     marginBottom: 16,

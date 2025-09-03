@@ -1,3 +1,4 @@
+import { useTheme } from '@/shared/configs/context/ThemeContext';
 import { FiltrationStatuses } from '@/shared/interfaces/filtration-statuses';
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
@@ -11,6 +12,7 @@ interface StatusesProps {
 
 const Statuses = ({ statuses, setStatuses }: StatusesProps) => {
     const { t } = useTranslation();
+    const { colors, isDark } = useTheme();
     const [showStatusFilter, setShowStatusFilter] = useState(false);
 
     const onPickStatus = (status: number) => {
@@ -23,15 +25,28 @@ const Statuses = ({ statuses, setStatuses }: StatusesProps) => {
 
     return (
         <>
-            <TouchableOpacity onPress={() => setShowStatusFilter(!showStatusFilter)} style={styles.statusFilter}>
-                <Ionicons name="funnel" size={20} color="#6b7280" />
-                <Text style={styles.filterLabel}>{t("wallet:status:title")}</Text>
-                <Text style={styles.filterValue}>{t("wallet:paymentType")}</Text>
+            <TouchableOpacity
+                onPress={() => setShowStatusFilter(!showStatusFilter)}
+                style={[
+                    styles.statusFilter,
+                    {
+                        backgroundColor: colors.background.card,
+                        shadowColor: isDark ? "transparent" : "#000",
+                        shadowOffset: isDark ? { width: 0, height: 0 } : { width: 0, height: 2 },
+                        shadowOpacity: isDark ? 0 : 0.05,
+                        shadowRadius: isDark ? 0 : 8,
+                        elevation: isDark ? 0 : 2,
+                    }
+                ]}
+            >
+                <Ionicons name="funnel" size={20} color={colors.text.secondary} />
+                <Text style={[styles.filterLabel, { color: colors.text.primary }]}>{t("wallet:status:title")}</Text>
+                <Text style={[styles.filterValue, { color: colors.text.primary }]}>{t("wallet:paymentType")}</Text>
                 {
                     showStatusFilter ? (
-                        <Ionicons name="chevron-up" size={20} color="#6b7280" />
+                        <Ionicons name="chevron-up" size={20} color={colors.text.secondary} />
                     ) : (
-                        <Ionicons name="chevron-down" size={20} color="#6b7280" />
+                        <Ionicons name="chevron-down" size={20} color={colors.text.secondary} />
                     )
                 }
             </TouchableOpacity>
@@ -53,10 +68,20 @@ const Statuses = ({ statuses, setStatuses }: StatusesProps) => {
                                 <TouchableOpacity
                                     onPress={() => onPickStatus(index)}
                                     key={index}
-                                    style={[styles.tab, isActive && styles.activeTab]}
+                                    style={[
+                                        styles.tab,
+                                        {
+                                            backgroundColor: colors.background.card,
+                                            borderColor: colors.border.light
+                                        },
+                                        isActive && styles.activeTab
+                                    ]}
                                 >
                                     <Text
-                                        style={[styles.tabText, isActive && styles.activeTabText]}
+                                        style={[
+                                            styles.tabText,
+                                            { color: colors.text.secondary }
+                                        ]}
                                     >
                                         {t(tab)}
                                     </Text>
@@ -78,12 +103,10 @@ const styles = StyleSheet.create({
         marginBottom: 16,
     },
     tab: {
-        backgroundColor: "white",
         borderRadius: 20,
         paddingHorizontal: 16,
         paddingVertical: 8,
         borderWidth: 1,
-        borderColor: "#e5e7eb",
     },
     activeTab: {
         backgroundColor: "#6366f1",
@@ -91,7 +114,6 @@ const styles = StyleSheet.create({
     },
     tabText: {
         fontSize: 14,
-        color: "#6b7280",
     },
     activeTabText: {
         color: "white",
@@ -99,24 +121,16 @@ const styles = StyleSheet.create({
     statusFilter: {
         flexDirection: "row",
         alignItems: "center",
-        backgroundColor: "white",
         borderRadius: 12,
         padding: 16,
         marginBottom: 16,
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.05,
-        shadowRadius: 8,
-        elevation: 2,
     },
     filterLabel: {
         fontSize: 14,
-        color: "#374151",
         marginLeft: 8,
     },
     filterValue: {
         fontSize: 14,
-        color: "#374151",
         flex: 1,
         textAlign: "right",
         marginRight: 8,

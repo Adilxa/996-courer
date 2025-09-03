@@ -1,3 +1,4 @@
+import { useTheme } from '@/shared/configs/context/ThemeContext';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -26,8 +27,21 @@ export const OrderCard: React.FC<OrderCardProps> = ({
     id,
 }) => {
     const { t } = useTranslation();
+    const { colors, isDark } = useTheme();
+
     return (
-        <TouchableOpacity style={styles.container}
+        <TouchableOpacity style={[
+            styles.container,
+            {
+                backgroundColor: colors.background.card,
+                borderColor: isDark ? colors.darkBorder : '#E5E7EB',
+                shadowColor: isDark ? "transparent" : "#000",
+                shadowOffset: isDark ? { width: 0, height: 0 } : { width: 0, height: 2 },
+                shadowOpacity: isDark ? 0 : 0.1,
+                shadowRadius: isDark ? 0 : 3.84,
+                elevation: isDark ? 0 : 5,
+            }
+        ]}
             onPress={() => {
                 router.push(`/(protected)/main/orders/${id}` as any);
             }}
@@ -35,26 +49,29 @@ export const OrderCard: React.FC<OrderCardProps> = ({
             {/* Top Section - Restaurant Name */}
             <View style={styles.topSection}>
                 <View style={styles.restaurantInfo}>
-                    <Text style={styles.restaurantLabel}>{t('orderCard:restaurant')}</Text>
-                    <Text style={styles.restaurantName}>{restaurantName}</Text>
+                    <Text style={[styles.restaurantLabel, { color: colors.text.secondary }]}>{t('orderCard:restaurant')}</Text>
+                    <Text style={[styles.restaurantName, { color: colors.text.primary }]}>{restaurantName}</Text>
                 </View>
                 <TouchableOpacity style={styles.iconButton}>
-                    <Ionicons name="call" size={18} color="#9CA3AF" />
+                    <Ionicons name="call" size={18} color={colors.text.secondary} />
                 </TouchableOpacity>
             </View>
 
             {/* Main Order Details Block */}
-            <View style={styles.orderDetailsBlock}>
-                <Text style={styles.orderDetailText}>
+            <View style={[
+                styles.orderDetailsBlock,
+                { backgroundColor: isDark ? colors.darkElements : '#F3F4F6' }
+            ]}>
+                <Text style={[styles.orderDetailText, { color: colors.text.primary }]}>
                     {t('orderCard:restaurant')} {restaurantName}
                 </Text>
-                <Text style={styles.orderDetailText}>
+                <Text style={[styles.orderDetailText, { color: colors.text.primary }]}>
                     {t('orderCard:orderNumber')} {orderNumber}
                 </Text>
-                <Text style={styles.orderDetailText}>
+                <Text style={[styles.orderDetailText, { color: colors.text.primary }]}>
                     {t('orderCard:orderTotal')} {orderTotal}
                 </Text>
-                <Text style={styles.orderDetailText}>
+                <Text style={[styles.orderDetailText, { color: colors.text.primary }]}>
                     {deliveryAddress}
                 </Text>
             </View>
@@ -62,22 +79,22 @@ export const OrderCard: React.FC<OrderCardProps> = ({
             {/* Bottom Section - Restaurant Address */}
             <View style={styles.bottomSection}>
                 <View style={styles.addressSection}>
-                    <Text style={styles.sectionLabel}>{t('orderCard:restaurantAddress')}</Text>
-                    <Text style={styles.addressText}>{restaurantAddress}</Text>
+                    <Text style={[styles.sectionLabel, { color: colors.text.secondary }]}>{t('orderCard:restaurantAddress')}</Text>
+                    <Text style={[styles.addressText, { color: colors.text.primary }]}>{restaurantAddress}</Text>
                 </View>
                 <TouchableOpacity style={styles.iconButton}>
-                    <Ionicons name="navigate" size={16} color="#9CA3AF" />
+                    <Ionicons name="navigate" size={16} color={colors.text.secondary} />
                 </TouchableOpacity>
             </View>
 
             {/* Delivery Time Section */}
             <View style={styles.deliveryTimeSection}>
                 <View style={styles.timeInfo}>
-                    <Text style={styles.sectionLabel}>{t('orderCard:estimatedDeliveryTime')}</Text>
-                    <Text style={styles.deliveryTimeText}>{estimatedDeliveryTime}</Text>
+                    <Text style={[styles.sectionLabel, { color: colors.text.secondary }]}>{t('orderCard:estimatedDeliveryTime')}</Text>
+                    <Text style={[styles.deliveryTimeText, { color: colors.text.primary }]}>{estimatedDeliveryTime}</Text>
                 </View>
                 <View style={styles.iconButton}>
-                    <Ionicons name="time" size={18} color="#9CA3AF" />
+                    <Ionicons name="time" size={18} color={colors.text.secondary} />
                 </View>
             </View>
         </TouchableOpacity>
@@ -86,20 +103,11 @@ export const OrderCard: React.FC<OrderCardProps> = ({
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: 'white',
         borderRadius: 12,
         padding: 16,
         marginBottom: 16,
         borderWidth: 1,
-        borderColor: '#E5E7EB',
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.1,
-        shadowRadius: 3.84,
-        elevation: 5,
+        // backgroundColor, borderColor, shadowColor, shadowOffset, shadowOpacity, shadowRadius, elevation теперь применяются динамически
     },
     topSection: {
         flexDirection: 'row',
@@ -112,23 +120,23 @@ const styles = StyleSheet.create({
     },
     restaurantLabel: {
         fontSize: 12,
-        color: '#9CA3AF',
+        // color теперь применяется динамически
         marginBottom: 2,
     },
     restaurantName: {
         fontSize: 18,
         fontWeight: 'bold',
-        color: '#111827',
+        // color теперь применяется динамически
     },
     orderDetailsBlock: {
-        backgroundColor: '#F3F4F6',
         borderRadius: 8,
         padding: 12,
         marginBottom: 16,
+        // backgroundColor теперь применяется динамически
     },
     orderDetailText: {
         fontSize: 14,
-        color: '#111827',
+        // color теперь применяется динамически
         marginBottom: 4,
         lineHeight: 20,
     },
@@ -143,12 +151,12 @@ const styles = StyleSheet.create({
     },
     sectionLabel: {
         fontSize: 12,
-        color: '#9CA3AF',
+        // color теперь применяется динамически
         marginBottom: 4,
     },
     addressText: {
         fontSize: 14,
-        color: '#111827',
+        // color теперь применяется динамически
         lineHeight: 20,
     },
     deliveryTimeSection: {
@@ -162,7 +170,7 @@ const styles = StyleSheet.create({
     deliveryTimeText: {
         fontSize: 16,
         fontWeight: 'bold',
-        color: '#111827',
+        // color теперь применяется динамически
     },
     iconButton: {
         padding: 4,

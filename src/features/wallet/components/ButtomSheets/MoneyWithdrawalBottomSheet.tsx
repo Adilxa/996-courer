@@ -1,4 +1,5 @@
 import { CustomIconComponent } from "@/shared/assets/icons/settings/CustomIconComponent";
+import { useTheme } from "@/shared/configs/context/ThemeContext";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -35,6 +36,7 @@ const WithdrawalConfirmationBottomSheet = ({
   isLoading: boolean;
 }) => {
   const { t } = useTranslation();
+  const { colors } = useTheme();
 
   return (
     <BottomSheet
@@ -44,11 +46,11 @@ const WithdrawalConfirmationBottomSheet = ({
       height={100 * 3.5}
     >
       <View style={styles.confirmationContent}>
-        <Text style={styles.confirmationTitle}>
+        <Text style={[styles.confirmationTitle, { color: colors.text.primary }]}>
           {t("wallet:sureWithdrawal", { amount: `${amount} с` })}
         </Text>
 
-        <Text style={styles.confirmationDescription}>
+        <Text style={[styles.confirmationDescription, { color: colors.text.secondary }]}>
           {t("wallet:withdrawDescription")}
         </Text>
 
@@ -68,8 +70,8 @@ const WithdrawalConfirmationBottomSheet = ({
   );
 };
 
-// Компонент успешного создания запроса (третий уровень)
-const WithdrawalSWaitingBottomSheet = ({
+// Компонент успешного вывода средств (третий уровень)
+const WithdrawalSuccessBottomSheet = ({
   isVisible,
   onClose,
   amount,
@@ -81,6 +83,7 @@ const WithdrawalSWaitingBottomSheet = ({
   transactionId: string;
 }) => {
   const { t } = useTranslation();
+  const { colors } = useTheme();
 
   return (
     <BottomSheet
@@ -91,7 +94,7 @@ const WithdrawalSWaitingBottomSheet = ({
     >
       <View style={styles.successContent}>
         {/* Описание */}
-        <Text style={styles.successDescription}>
+        <Text style={[styles.successDescription, { color: colors.text.secondary }]}>
           {t("wallet:requestDescription")}
         </Text>
 
@@ -122,6 +125,7 @@ export default function MoneyWithdrawalBottomSheet({
   onWithdraw,
 }: MoneyWithdrawalBottomSheetProps) {
   const { t } = useTranslation();
+  const { colors, isDark } = useTheme();
   const [withdrawAmount, setWithdrawAmount] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -278,35 +282,45 @@ export default function MoneyWithdrawalBottomSheet({
         title={t("wallet:withdrawalConfirmation")}
       >
         <TouchableWithoutFeedback onPress={handleDismissKeyboard}>
-          <View style={styles.bottomSheetContent}>
+          <View style={[styles.bottomSheetContent, { backgroundColor: colors.background.primary }]}>
 
             <View style={styles.inputContainer}>
-              <Text style={styles.inputLabel}>
+              <Text style={[styles.inputLabel, { color: colors.text.primary }]}>
                 {t("wallet:enterWithdrawAmount")}
               </Text>
 
               <View style={[
                 styles.inputWrapper,
+                {
+                  backgroundColor: colors.background.card,
+                  borderColor: error ? '#ef4444' : colors.border.light,
+                  shadowColor: isDark ? "transparent" : "#000",
+                  shadowOffset: isDark ? { width: 0, height: 0 } : { width: 0, height: 2 },
+                  shadowOpacity: isDark ? 0 : 0.05,
+                  shadowRadius: isDark ? 0 : 8,
+                  elevation: isDark ? 0 : 2,
+                },
                 error && styles.inputWrapperError
               ]}>
                 <TextInput
                   style={[
                     styles.input,
+                    { color: colors.text.primary },
                     error && styles.inputError
                   ]}
                   value={withdrawAmount}
                   onChangeText={handleAmountChange}
                   keyboardType="numeric"
                   placeholder="0"
-                  placeholderTextColor="#9ca3af"
+                  placeholderTextColor={colors.text.secondary}
                   returnKeyType="done"
                   onSubmitEditing={handleDismissKeyboard}
                   autoFocus={false}
                 />
-                <Text style={styles.currency}>с</Text>
+                <Text style={[styles.currency, { color: colors.text.secondary }]}>с</Text>
 
                 <TouchableOpacity
-                  style={styles.maxButton}
+                  style={[styles.maxButton, { backgroundColor: colors.primary[500] }]}
                   onPress={handleMaxAmount}
                 >
                   <Text style={styles.maxButtonText}>
@@ -320,16 +334,36 @@ export default function MoneyWithdrawalBottomSheet({
               ) : null}
             </View>
 
-            <View style={styles.balanceInfo}>
-              <Ionicons name="wallet-outline" size={20} color="#6366f1" />
-              <Text style={styles.balanceInfoText}>
+            <View style={[
+              styles.balanceInfo,
+              {
+                backgroundColor: colors.background.card,
+                shadowColor: isDark ? "transparent" : "#000",
+                shadowOffset: isDark ? { width: 0, height: 0 } : { width: 0, height: 2 },
+                shadowOpacity: isDark ? 0 : 0.05,
+                shadowRadius: isDark ? 0 : 8,
+                elevation: isDark ? 0 : 2,
+              }
+            ]}>
+              <Ionicons name="wallet-outline" size={20} color={colors.primary[500]} />
+              <Text style={[styles.balanceInfoText, { color: colors.text.secondary }]}>
                 {t("wallet:availableBalance")}: {numericBalance} с
               </Text>
             </View>
 
-            <View style={styles.feeInfo}>
-              <Ionicons name="information-circle-outline" size={16} color="#6b7280" />
-              <Text style={styles.feeInfoText}>
+            <View style={[
+              styles.feeInfo,
+              {
+                backgroundColor: colors.background.card,
+                shadowColor: isDark ? "transparent" : "#000",
+                shadowOffset: isDark ? { width: 0, height: 0 } : { width: 0, height: 2 },
+                shadowOpacity: isDark ? 0 : 0.05,
+                shadowRadius: isDark ? 0 : 8,
+                elevation: isDark ? 0 : 2,
+              }
+            ]}>
+              <Ionicons name="information-circle-outline" size={16} color={colors.text.secondary} />
+              <Text style={[styles.feeInfoText, { color: colors.text.secondary }]}>
                 {t("wallet:withdrawalProcessingInfo")}
               </Text>
             </View>
@@ -341,6 +375,10 @@ export default function MoneyWithdrawalBottomSheet({
               <View
                 style={[
                   styles.checkbox,
+                  {
+                    backgroundColor: acceptedTerms ? colors.primary[500] : colors.background.card,
+                    borderColor: acceptedTerms ? colors.primary[500] : colors.border.light
+                  },
                   acceptedTerms && styles.checkboxChecked,
                   showTermsError && !acceptedTerms && styles.checkboxError,
                 ]}
@@ -352,6 +390,7 @@ export default function MoneyWithdrawalBottomSheet({
               <Text
                 style={[
                   styles.termsText,
+                  { color: colors.text.primary },
                   showTermsError && !acceptedTerms && styles.termsTextError,
                 ]}
               >
@@ -368,6 +407,7 @@ export default function MoneyWithdrawalBottomSheet({
             <TouchableOpacity
               style={[
                 styles.bottomSheetButton,
+                { backgroundColor: colors.primary[500] },
                 !canProceed && styles.disabledButton
               ]}
               onPress={handleContinue}
@@ -394,7 +434,7 @@ export default function MoneyWithdrawalBottomSheet({
       />
 
       {/* Третий уровень: Успех */}
-      <WithdrawalSWaitingBottomSheet
+      <WithdrawalSuccessBottomSheet
         isVisible={showSuccess}
         onClose={handleCloseSuccess}
         amount={withdrawAmount}
@@ -412,7 +452,6 @@ const styles = StyleSheet.create({
   balanceInfo: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#f8fafc",
     padding: 16,
     borderRadius: 12,
     marginBottom: 20,
@@ -420,7 +459,6 @@ const styles = StyleSheet.create({
   balanceInfoText: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#374151",
     marginLeft: 8,
   },
   inputContainer: {
@@ -429,17 +467,16 @@ const styles = StyleSheet.create({
   inputLabel: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#374151",
     marginBottom: 8,
   },
   inputWrapper: {
     flexDirection: "row",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "#e5e7eb",
     borderRadius: 12,
-    backgroundColor: "#fff",
     paddingHorizontal: 16,
+    paddingVertical: 12,
+    marginBottom: 8,
   },
   inputWrapperError: {
     borderColor: "#ef4444",
@@ -449,7 +486,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "600",
     paddingVertical: 16,
-    color: "#111827",
   },
   inputError: {
     color: "#ef4444",
@@ -457,11 +493,9 @@ const styles = StyleSheet.create({
   currency: {
     fontSize: 16,
     fontWeight: "500",
-    color: "#6b7280",
     marginRight: 12,
   },
   maxButton: {
-    backgroundColor: "#6366f1",
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 8,
@@ -479,7 +513,6 @@ const styles = StyleSheet.create({
   },
   feeInfo: {
     flexDirection: "row",
-    backgroundColor: "#f0f9ff",
     padding: 12,
     borderRadius: 8,
     marginBottom: 20,
@@ -487,7 +520,6 @@ const styles = StyleSheet.create({
   },
   feeInfoText: {
     fontSize: 14,
-    color: "#6b7280",
     marginLeft: 8,
     lineHeight: 20,
     flex: 1,
@@ -502,16 +534,13 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     borderWidth: 2,
-    borderColor: "#d1d5db",
     borderRadius: 4,
     justifyContent: "center",
     alignItems: "center",
     marginRight: 12,
-    backgroundColor: "white",
   },
   checkboxChecked: {
-    backgroundColor: "#6366f1",
-    borderColor: "#6366f1",
+    // Цвета теперь применяются динамически
   },
   checkboxError: {
     borderColor: "#ef4444",
@@ -519,7 +548,6 @@ const styles = StyleSheet.create({
   termsText: {
     flex: 1,
     fontSize: 14,
-    color: "#374151",
     lineHeight: 20,
   },
   termsTextError: {
@@ -558,13 +586,11 @@ const styles = StyleSheet.create({
   confirmationTitle: {
     fontSize: 18,
     fontWeight: "600",
-    color: "#111827",
     textAlign: "center",
     marginBottom: 16,
   },
   confirmationDescription: {
     fontSize: 14,
-    color: "#6b7280",
     textAlign: "center",
     marginBottom: 24,
     lineHeight: 20,
@@ -597,19 +623,16 @@ const styles = StyleSheet.create({
   successTitle: {
     fontSize: 20,
     fontWeight: "600",
-    color: "#111827",
     textAlign: "center",
     marginBottom: 12,
   },
   successDescription: {
     fontSize: 14,
-    color: "#6b7280",
     textAlign: "center",
     marginBottom: 24,
     lineHeight: 20,
   },
   requestDetails: {
-    backgroundColor: "#f8fafc",
     borderRadius: 12,
     padding: 16,
     width: "100%",
@@ -623,12 +646,10 @@ const styles = StyleSheet.create({
   },
   detailLabel: {
     fontSize: 14,
-    color: "#6b7280",
   },
   detailValue: {
     fontSize: 14,
     fontWeight: "600",
-    color: "#111827",
   },
   statusBadge: {
     backgroundColor: "#fbbf24",
@@ -644,7 +665,6 @@ const styles = StyleSheet.create({
   infoBox: {
     flexDirection: "row",
     alignItems: "flex-start",
-    backgroundColor: "#eff6ff",
     padding: 12,
     borderRadius: 8,
     width: "100%",
@@ -652,7 +672,6 @@ const styles = StyleSheet.create({
   },
   infoText: {
     fontSize: 14,
-    color: "#6366f1",
     marginLeft: 8,
     lineHeight: 20,
     flex: 1,

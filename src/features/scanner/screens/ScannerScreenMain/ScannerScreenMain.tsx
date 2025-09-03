@@ -3,6 +3,7 @@ import { CustomIconComponent } from "@/shared/assets/icons/settings/CustomIconCo
 import { BurgerMenuComponent, SafeAreaScreenComponent } from "@/shared/components";
 import { CustomHeaderComponent } from "@/shared/components/layout/CustomHeaderComponent/CustomHeaderComponent";
 import { useLanguage } from "@/shared/configs/context/LanguageContext";
+import { useTheme } from "@/shared/configs/context/ThemeContext";
 import { Camera, CameraView } from "expo-camera";
 import { router } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
@@ -19,6 +20,7 @@ import {
 export default function ScannerScreenMain() {
   const { t } = useTranslation();
   const { currentLanguage, changeLanguage } = useLanguage();
+  const { colors, isDark } = useTheme();
   const [activeTab, setActiveTab] = useState<"pickup" | "return">("pickup");
   const [orderNumber, setOrderNumber] = useState("");
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
@@ -149,8 +151,8 @@ export default function ScannerScreenMain() {
 
   return (
     <SafeAreaScreenComponent
-      backgroundColor="#ffffff"
-      statusBarStyle="dark-content"
+      backgroundColor={colors.background.primary}
+      statusBarStyle={isDark ? "light-content" : "dark-content"}
     >
       <CustomHeaderComponent
         onNotificationPress={() => setShowNotifications(true)}
@@ -254,9 +256,9 @@ export default function ScannerScreenMain() {
           </View>
         </View>
       ) : hasPermission === false ? (
-        <View style={styles.permissionContainer}>
-          <CustomIconComponent name="camera" size={64} color="#6b7280" />
-          <Text style={styles.permissionText}>{t("scanner:noCameraAccess")}</Text>
+        <View style={[styles.permissionContainer, { backgroundColor: colors.background.primary }]}>
+          <CustomIconComponent name="camera" size={64} color={colors.text.secondary} />
+          <Text style={[styles.permissionText, { color: colors.text.secondary }]}>{t("scanner:noCameraAccess")}</Text>
           <TouchableOpacity
             style={styles.permissionButton}
             onPress={getCameraPermissions}
@@ -265,9 +267,9 @@ export default function ScannerScreenMain() {
           </TouchableOpacity>
         </View>
       ) : !showCamera && scanSuccess ? (
-        <View style={styles.scanAgainContainer}>
-          <CustomIconComponent name="camera" size={64} color="#6366f1" />
-          <Text style={styles.scanSuccessText}>{t("scanner:scanSuccess")}</Text>
+        <View style={[styles.scanAgainContainer, { backgroundColor: colors.background.primary }]}>
+          <CustomIconComponent name="camera" size={64} color={colors.primary[500]} />
+          <Text style={[styles.scanSuccessText, { color: colors.primary[500] }]}>{t("scanner:scanSuccess")}</Text>
           <TouchableOpacity
             style={styles.scanAgainButton}
             onPress={handleScanAgain}
@@ -276,19 +278,19 @@ export default function ScannerScreenMain() {
           </TouchableOpacity>
         </View>
       ) : (
-        <View style={styles.loadingContainer}>
-          <CustomIconComponent name="camera" size={64} color="#6366f1" />
-          <Text style={styles.loadingText}>{t("scanner:loadingCamera")}</Text>
+        <View style={[styles.loadingContainer, { backgroundColor: colors.background.primary }]}>
+          <CustomIconComponent name="camera" size={64} color={colors.primary[500]} />
+          <Text style={[styles.loadingText, { color: colors.primary[500] }]}>{t("scanner:loadingCamera")}</Text>
         </View>
       )}
 
       {/* Logo */}
       <View style={styles.logoContainer}>
-        <Text style={styles.logo}>996.kg</Text>
+        <Text style={[styles.logo, { color: colors.primary[500] }]}>996.kg</Text>
       </View>
 
       {/* Tab Buttons */}
-      <View style={styles.tabContainer}>
+      <View style={[styles.tabContainer, { backgroundColor: isDark ? colors.darkElements : "#f3f4f6" }]}>
         <TouchableOpacity
           style={[styles.tab, activeTab === "pickup" && styles.activeTab]}
           onPress={() => setActiveTab("pickup")}
@@ -296,6 +298,7 @@ export default function ScannerScreenMain() {
           <Text
             style={[
               styles.tabText,
+              { color: colors.text.secondary },
               activeTab === "pickup" && styles.activeTabText,
             ]}
           >
@@ -309,6 +312,7 @@ export default function ScannerScreenMain() {
           <Text
             style={[
               styles.tabText,
+              { color: colors.text.secondary },
               activeTab === "return" && styles.activeTabText,
             ]}
           >
@@ -318,8 +322,17 @@ export default function ScannerScreenMain() {
       </View>
 
       {/* Manual Input */}
-      <TouchableOpacity style={styles.manualInput} onPress={handleManualInput}>
-        <Text style={styles.manualInputText}>{t("scanner:enterOrderNumberManually")}</Text>
+      <TouchableOpacity
+        style={[
+          styles.manualInput,
+          {
+            backgroundColor: colors.background.card,
+            borderColor: isDark ? colors.darkBorder : "#e5e7eb"
+          }
+        ]}
+        onPress={handleManualInput}
+      >
+        <Text style={[styles.manualInputText, { color: colors.text.secondary }]}>{t("scanner:enterOrderNumberManually")}</Text>
       </TouchableOpacity>
 
       {/* Menu and Notifications */}
@@ -344,12 +357,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 20,
     paddingVertical: 16,
-    backgroundColor: "white",
+    // backgroundColor теперь применяется динамически
   },
   logo: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#6366f1",
+    // color теперь применяется динамически
   },
   headerIcons: {
     flexDirection: "row",
@@ -359,7 +372,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginHorizontal: 20,
     marginVertical: 16,
-    backgroundColor: "#f3f4f6",
+    // backgroundColor теперь применяется динамически
     borderRadius: 25,
     padding: 4,
   },
@@ -374,7 +387,7 @@ const styles = StyleSheet.create({
   },
   tabText: {
     fontSize: 16,
-    color: "#6b7280",
+    // color теперь применяется динамически
   },
   activeTabText: {
     color: "#ffffff",
@@ -385,10 +398,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 20,
+    // backgroundColor теперь применяется динамически
   },
   permissionText: {
     fontSize: 18,
-    color: "#6b7280",
+    // color теперь применяется динамически
     textAlign: "center",
     marginTop: 16,
     marginBottom: 24,
@@ -409,10 +423,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 20,
+    // backgroundColor теперь применяется динамически
   },
   loadingText: {
     fontSize: 18,
-    color: "#6366f1",
+    // color теперь применяется динамически
     textAlign: "center",
     marginTop: 16,
   },
@@ -570,13 +585,12 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     borderRadius: 25,
     borderWidth: 1,
-    borderColor: "#e5e7eb",
+    // backgroundColor и borderColor теперь применяются динамически
     alignItems: "center",
-    backgroundColor: "#ffffff",
   },
   manualInputText: {
     fontSize: 16,
-    color: "#6b7280",
+    // color теперь применяется динамически
   },
   menuOverlay: {
     position: "absolute",
@@ -584,7 +598,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: "#ffffff",
+    // backgroundColor теперь применяется динамически
     zIndex: 1000,
   },
   closeButton: {
@@ -613,7 +627,7 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     marginBottom: 20,
     borderBottomWidth: 1,
-    borderBottomColor: "#f3f4f6",
+    // borderBottomColor теперь применяется динамически
   },
   userAvatar: {
     width: 48,
@@ -630,12 +644,12 @@ const styles = StyleSheet.create({
   userName: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#111827",
+    // color теперь применяется динамически
     marginBottom: 2,
   },
   userEmail: {
     fontSize: 14,
-    color: "#6b7280",
+    // color теперь применяется динамически
   },
   loginButton: {
     backgroundColor: "#6366f1",
@@ -659,14 +673,14 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: "#f3f4f6",
+    // backgroundColor теперь применяется динамически
     justifyContent: "center",
     alignItems: "center",
     marginRight: 12,
   },
   languageSelector: {
     flexDirection: "row",
-    backgroundColor: "#f3f4f6",
+    // backgroundColor теперь применяется динамически
     borderRadius: 25,
     padding: 4,
   },
@@ -683,7 +697,7 @@ const styles = StyleSheet.create({
   langText: {
     fontSize: 14,
     fontWeight: "500",
-    color: "#6b7280",
+    // color теперь применяется динамически
   },
   activeLangText: {
     color: "#ffffff",
@@ -693,11 +707,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: "#f3f4f6",
+    // borderBottomColor теперь применяется динамически
   },
   menuItemText: {
     fontSize: 16,
-    color: "#374151",
+    // color теперь применяется динамически
     marginLeft: 16,
   },
   startSellingButton: {
@@ -728,7 +742,7 @@ const styles = StyleSheet.create({
   },
   copyright: {
     fontSize: 12,
-    color: "#9ca3af",
+    // color теперь применяется динамически
     textAlign: "center",
     marginTop: "auto",
     paddingBottom: 40,
@@ -738,10 +752,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 20,
+    // backgroundColor теперь применяется динамически
   },
   scanSuccessText: {
     fontSize: 18,
-    color: "#6366f1",
+    // color теперь применяется динамически
     textAlign: "center",
     marginTop: 16,
     marginBottom: 24,

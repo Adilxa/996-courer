@@ -1,4 +1,5 @@
 import { CustomIconComponent } from "@/shared/assets/icons/settings/CustomIconComponent";
+import { useTheme } from "@/shared/configs/context/ThemeContext";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { selectTypes, Types } from "../../constants";
 
@@ -10,6 +11,7 @@ interface TypeSelectProps {
 
 
 export const TypeSelect: React.FC<TypeSelectProps> = ({ types, setType }) => {
+    const { colors, isDark } = useTheme();
 
     const onSelectType = (type: Types) => {
         setType(type);
@@ -19,8 +21,28 @@ export const TypeSelect: React.FC<TypeSelectProps> = ({ types, setType }) => {
         <View style={styles.container}>
             {
                 selectTypes.map((type) => (
-                    <TouchableOpacity style={[styles.element, types?.type === type.type && styles.elementActive]} key={type.type} onPress={() => onSelectType(type)}>
-                        <CustomIconComponent name={type.type} size={32} color={types?.type === type.type ? "white" : "black"} />
+                    <TouchableOpacity
+                        style={[
+                            styles.element,
+                            {
+                                borderColor: isDark ? colors.darkBorder : "#e5e7eb",
+                                backgroundColor: isDark ? colors.darkElements : "transparent"
+                            },
+                            types?.type === type.type && styles.elementActive
+                        ]}
+                        key={type.type}
+                        onPress={() => onSelectType(type)}
+                    >
+                        <CustomIconComponent
+                            name={type.type}
+                            size={32}
+                            color={types?.type === type.type
+                                ? "white"
+                                : isDark
+                                    ? colors.text.primary
+                                    : "#000000"
+                            }
+                        />
                     </TouchableOpacity>
                 ))
             }
@@ -40,7 +62,7 @@ const styles = StyleSheet.create({
         width: "22%",
         aspectRatio: 1,
         borderWidth: 1,
-        borderColor: "#e5e7eb",
+        // borderColor и backgroundColor теперь применяются динамически
         borderRadius: 8,
         justifyContent: "center",
         alignItems: "center",

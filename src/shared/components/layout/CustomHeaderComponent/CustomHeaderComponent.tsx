@@ -28,7 +28,7 @@ export const CustomHeaderComponent: React.FC<CustomHeaderComponentProps> = ({
         styles.header,
         {
           backgroundColor: colors.background.primary,
-          borderBottomColor: colors.border.light
+          borderBottomColor: isDark ? colors.darkBorder : colors.border.light
         },
         style
       ]}

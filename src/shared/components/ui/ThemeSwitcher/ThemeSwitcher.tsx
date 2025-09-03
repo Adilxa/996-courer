@@ -18,7 +18,7 @@ export const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({ style }) => {
           styles.themeButton,
           !isDarkMode && styles.activeThemeButton,
         ]}
-        onPress={() => !isDarkMode && toggleTheme()}
+        onPress={() => toggleTheme()}
       >
         <CustomIconComponent
           name="sunny"
@@ -31,7 +31,7 @@ export const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({ style }) => {
           styles.themeButton,
           isDarkMode && styles.activeThemeButton,
         ]}
-        onPress={() => isDarkMode && toggleTheme()}
+        onPress={() => toggleTheme()}
       >
         <CustomIconComponent
           name="moon"

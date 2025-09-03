@@ -33,7 +33,18 @@ const userInfo = [
 ]
 
 const StatCardLoader = ({ colors }: { colors: any }) => (
-  <View style={[styles.statCard, styles.loaderCard, { backgroundColor: colors.background.primary, borderWidth: 1, borderColor: 'white' }]}>
+  <View style={[
+    styles.statCard,
+    styles.loaderCard,
+    {
+      backgroundColor: colors.background.card,
+      shadowColor: colors.background.primary === '#ffffff' ? "#000" : "transparent",
+      shadowOffset: colors.background.primary === '#ffffff' ? { width: 0, height: 2 } : { width: 0, height: 0 },
+      shadowOpacity: colors.background.primary === '#ffffff' ? 0.05 : 0,
+      shadowRadius: colors.background.primary === '#ffffff' ? 8 : 0,
+      elevation: colors.background.primary === '#ffffff' ? 2 : 0,
+    }
+  ]}>
     <ActivityIndicator size="small" color={colors.primary[500]} />
     <View style={[styles.loaderLine, { backgroundColor: colors.background.secondary }]} />
     <View style={[styles.loaderLine, { width: '60%', backgroundColor: colors.background.secondary }]} />
@@ -41,13 +52,33 @@ const StatCardLoader = ({ colors }: { colors: any }) => (
 );
 
 const ProfileLoader = ({ colors }: { colors: any }) => (
-  <View style={[styles.profileContainer, { backgroundColor: colors.background.primary, borderWidth: 1, borderColor: 'white' }]}>
-    <View style={[styles.userAvatar, styles.loaderAvatar, { backgroundColor: colors.background.secondary, borderWidth: 1, borderColor: 'white' }]}>
+  <View style={[
+    styles.profileContainer,
+    {
+      backgroundColor: colors.background.card,
+      shadowColor: colors.background.primary === '#ffffff' ? "#000" : "transparent",
+      shadowOffset: colors.background.primary === '#ffffff' ? { width: 0, height: 0 } : { width: 0, height: 0 },
+      shadowOpacity: colors.background.primary === '#ffffff' ? 0.1 : 0,
+      shadowRadius: colors.background.primary === '#ffffff' ? 4 : 0,
+      elevation: colors.background.primary === '#ffffff' ? 10 : 0,
+    }
+  ]}>
+    <View style={[styles.userAvatar, styles.loaderAvatar, { backgroundColor: colors.background.secondary }]}>
       <ActivityIndicator size="small" color={colors.primary[500]} />
     </View>
     <View style={[styles.loaderLine, { width: 150, height: 20, backgroundColor: colors.background.secondary }]} />
 
-    <View style={[styles.userInfo, { borderColor: 'white', borderWidth: 1 }]}>
+    <View style={[
+      styles.userInfo,
+      {
+        backgroundColor: colors.background.primary === '#ffffff' ? '#ffffff' : 'transparent',
+        shadowColor: colors.background.primary === '#ffffff' ? "#000" : "transparent",
+        shadowOffset: colors.background.primary === '#ffffff' ? { width: 0, height: 0 } : { width: 0, height: 0 },
+        shadowOpacity: colors.background.primary === '#ffffff' ? 0.1 : 0,
+        shadowRadius: colors.background.primary === '#ffffff' ? 1 : 0,
+        elevation: colors.background.primary === '#ffffff' ? 2 : 0,
+      }
+    ]}>
       {userInfo.map((_, i) => (
         <View key={`loader_${i}`} style={styles.userInfoRow}>
           <View style={[styles.loaderLine, { width: 120, height: 16, backgroundColor: colors.background.secondary }]} />
@@ -94,7 +125,17 @@ export default function HomeScreen() {
           {applicationsLoading ? (
             <StatCardLoader colors={colors} />
           ) : (
-            <View style={[styles.statCard, { backgroundColor: colors.background.primary, borderWidth: 1, borderColor: 'white' }]}>
+            <View style={[
+              styles.statCard,
+              {
+                backgroundColor: colors.background.card,
+                shadowColor: colors.background.primary === '#ffffff' ? "#000" : "transparent",
+                shadowOffset: colors.background.primary === '#ffffff' ? { width: 0, height: 2 } : { width: 0, height: 0 },
+                shadowOpacity: colors.background.primary === '#ffffff' ? 0.05 : 0,
+                shadowRadius: colors.background.primary === '#ffffff' ? 8 : 0,
+                elevation: colors.background.primary === '#ffffff' ? 2 : 0,
+              }
+            ]}>
               <CustomIconComponent name="applications" size={34} color={colors.white} />
               <Text style={[styles.statTitle, { color: colors.text.primary }]}>{t("home:applications")}</Text>
               <Text style={[styles.statValue, { color: colors.text.primary }]}>{applications?.amount || 0}</Text>
@@ -102,7 +143,17 @@ export default function HomeScreen() {
             </View>
           )}
 
-          <View style={[styles.statCard, { backgroundColor: colors.background.primary, borderWidth: 1, borderColor: 'white' }]}>
+          <View style={[
+            styles.statCard,
+            {
+              backgroundColor: colors.background.card,
+              shadowColor: colors.background.primary === '#ffffff' ? "#000" : "transparent",
+              shadowOffset: colors.background.primary === '#ffffff' ? { width: 0, height: 2 } : { width: 0, height: 0 },
+              shadowOpacity: colors.background.primary === '#ffffff' ? 0.05 : 0,
+              shadowRadius: colors.background.primary === '#ffffff' ? 8 : 0,
+              elevation: colors.background.primary === '#ffffff' ? 2 : 0,
+            }
+          ]}>
             <CustomIconComponent name="cash" size={34} color={colors.white} />
             <Text style={[styles.statTitle, { color: colors.text.primary }]}>{t("home:income")}</Text>
             <Text style={[styles.statValue, { color: colors.text.primary }]}>35 000 с</Text>
@@ -114,14 +165,24 @@ export default function HomeScreen() {
         {profileLoading ? (
           <ProfileLoader colors={colors} />
         ) : (
-          <View style={[styles.profileContainer, { backgroundColor: colors.background.primary, borderWidth: 1, borderColor: 'white' }]}>
+          <View style={[
+            styles.profileContainer,
+            {
+              backgroundColor: colors.background.card,
+              shadowColor: colors.background.primary === '#ffffff' ? "#000" : "transparent",
+              shadowOffset: colors.background.primary === '#ffffff' ? { width: 0, height: 0 } : { width: 0, height: 0 },
+              shadowOpacity: colors.background.primary === '#ffffff' ? 0.1 : 0,
+              shadowRadius: colors.background.primary === '#ffffff' ? 4 : 0,
+              elevation: colors.background.primary === '#ffffff' ? 10 : 0,
+            }
+          ]}>
             {data?.avatar !== null ? (
               <Image
                 source={{ uri: `${BASE_URL}/${data?.avatar?.path}` }}
                 style={styles.userAvatar}
               />
             ) : (
-              <View style={[styles.userAvatar, { backgroundColor: colors.primary[100], borderWidth: 1, borderColor: 'white' }]}>
+              <View style={[styles.userAvatar, { backgroundColor: colors.background.card }]}>
                 <Text style={[styles.userAvatarText, { color: colors.primary[600] }]}>
                   {data?.name != null ? data?.name[0] : "AV"}
                 </Text>
@@ -132,7 +193,17 @@ export default function HomeScreen() {
               {data?.name || "A"} {data?.surname || "V"}
             </Text>
 
-            <View style={[styles.userInfo, { borderColor: 'white', borderWidth: 1 }]}>
+            <View style={[
+              styles.userInfo,
+              {
+                backgroundColor: colors.background.primary === '#ffffff' ? '#ffffff' : 'transparent',
+                shadowColor: colors.background.primary === '#ffffff' ? "#000" : "transparent",
+                shadowOffset: colors.background.primary === '#ffffff' ? { width: 0, height: 0 } : { width: 0, height: 0 },
+                shadowOpacity: colors.background.primary === '#ffffff' ? 0.1 : 0,
+                shadowRadius: colors.background.primary === '#ffffff' ? 1 : 0,
+                elevation: colors.background.primary === '#ffffff' ? 2 : 0,
+              }
+            ]}>
               {userInfo.map((item, i) => (
                 <View key={`${item.key}_${i}`} style={styles.userInfoRow}>
                   <Text style={[styles.userInfoRowTitle, { color: colors.text.secondary }]}>
@@ -447,7 +518,7 @@ const styles = StyleSheet.create({
   userInfo: {
     flex: 1,
     width: "100%",
-    borderWidth: 1,
+
     borderRadius: 8,
     padding: 15,
     flexDirection: "column",

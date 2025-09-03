@@ -49,7 +49,7 @@ export const BurgerMenuComponent: React.FC<BurgerMenuComponentProps> = ({
         showsVerticalScrollIndicator={false}
       >
         {/* Top Section with Theme and Language */}
-        <View style={[styles.topSection, { borderBottomColor: colors.border.light }]}>
+        <View style={[styles.topSection, { borderBottomColor: colors.darkBorder }]}>
           <View style={styles.themeLanguageRow}>
             <ThemeSwitcher />
             <LanguageSwitcher />
@@ -57,7 +57,7 @@ export const BurgerMenuComponent: React.FC<BurgerMenuComponentProps> = ({
         </View>
 
         {/* Location and Support */}
-        <View style={[styles.infoSection, { borderBottomColor: colors.border.light }]}>
+        <View style={[styles.infoSection, { borderBottomColor: colors.darkBorder }]}>
           <TouchableOpacity style={[styles.locationItem, { backgroundColor: colors.background.secondary }]}>
             <CustomIconComponent name="location" size={20} color={colors.text.secondary} />
             <Text style={[styles.locationText, { color: colors.text.primary }]}>{t("menu:location")}</Text>
