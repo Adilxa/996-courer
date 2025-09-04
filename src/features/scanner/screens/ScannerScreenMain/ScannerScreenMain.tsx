@@ -285,9 +285,11 @@ export default function ScannerScreenMain() {
       )}
 
       {/* Logo */}
-      <View style={styles.logoContainer}>
+      {/* <View style={styles.logoContainer}>
         <Text style={[styles.logo, { color: colors.primary[500] }]}>996.kg</Text>
-      </View>
+      </View> */}
+      <CustomIconComponent name="logo" color={colors.primary[500]} width={100} height={100} />
+
 
       {/* Tab Buttons */}
       <View style={[styles.tabContainer, { backgroundColor: isDark ? colors.darkElements : "#f3f4f6" }]}>

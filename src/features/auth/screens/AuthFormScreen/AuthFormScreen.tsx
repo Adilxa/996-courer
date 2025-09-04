@@ -1,5 +1,6 @@
 import { CustomIconComponent } from "@/shared/assets/icons/settings/CustomIconComponent";
 import { CustomLogoComponent } from "@/shared/assets/logos/settings/CustomLogoComponent";
+import { useTheme } from "@/shared/configs/context/ThemeContext";
 import { formatPhoneNumber } from "@/shared/util/phone-formatter";
 import { Ionicons } from "@expo/vector-icons";
 import { useMutation } from "@tanstack/react-query";
@@ -24,6 +25,7 @@ import { signIn, SignInType } from "./api";
 
 export default function AuthFormScreen() {
   const { t } = useTranslation();
+  const { colors, isDark } = useTheme();
   const [phoneNumber, setPhoneNumber] = useState("");
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [showTermsError, setShowTermsError] = useState(false);
@@ -61,10 +63,13 @@ export default function AuthFormScreen() {
   };
 
   return (
-    <SafeAreaScreenComponent>
-      <StatusBar barStyle="dark-content" backgroundColor="white" />
+    <SafeAreaScreenComponent backgroundColor={colors.background.primary}>
+      <StatusBar
+        barStyle={isDark ? "light-content" : "dark-content"}
+        backgroundColor={colors.background.primary}
+      />
       <KeyboardAvoidingView
-        style={styles.container}
+        style={[styles.container, { backgroundColor: colors.background.primary }]}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
         <ScrollView
@@ -74,12 +79,22 @@ export default function AuthFormScreen() {
         >
           {/* Logo */}
           <View style={styles.logoContainer}>
-            <CustomLogoComponent name="light" width={170} height={45} />
+            <CustomLogoComponent name={isDark ? "dark" : "light"} width={170} height={45} />
           </View>
 
           {/* Main Card */}
-          <View style={styles.card}>
-            <Text style={styles.title}>Войти или создать профиль</Text>
+          <View style={[
+            styles.card,
+            {
+              backgroundColor: colors.background.card,
+              shadowColor: isDark ? "transparent" : "#000",
+              shadowOffset: isDark ? { width: 0, height: 0 } : { width: 0, height: 2 },
+              shadowOpacity: isDark ? 0 : 0.1,
+              shadowRadius: isDark ? 0 : 8,
+              elevation: isDark ? 0 : 4,
+            }
+          ]}>
+            <Text style={[styles.title, { color: colors.text.primary }]}>Войти или создать профиль</Text>
 
             {/* Social Login Options */}
             <View style={styles.socialContainer}>
@@ -91,6 +106,10 @@ export default function AuthFormScreen() {
                     key={method.name}
                     style={[
                       styles.socialButton,
+                      {
+                        borderColor: isDark ? 'transparent' : "#e5e7eb",
+                        backgroundColor: isDark ? colors.background.secondary : "white",
+                      },
                       isSelected ? styles.socialButtonSelected : styles.socialButtonDefault
                     ]}
                     onPress={() => handleMethodSelect(method.name)}
@@ -99,7 +118,7 @@ export default function AuthFormScreen() {
                     <CustomIconComponent
                       name={method.icon}
                       size={22}
-                      color={isSelected ? method.color : "black"}
+                      color={isSelected ? method.color : (isDark ? colors.text.primary : "black")}
                     />
                     {isSelected && (
                       <Text style={[styles.methodText, { fontSize: 12 }]}>
@@ -121,7 +140,11 @@ export default function AuthFormScreen() {
 
             {/* Get Code Button */}
             <TouchableOpacity
-              style={[styles.button, mutation.isPending && styles.buttonDisabled]}
+              style={[
+                styles.button,
+                { backgroundColor: colors.primary[500] },
+                mutation.isPending && styles.buttonDisabled
+              ]}
               onPress={() => mutation.mutate({ phoneNumber: formatPhoneNumber(phoneNumber, countryCode), selectedAuthMethod: selectedAuthMethod as SignInType })}
               disabled={mutation.isPending}
             >
@@ -143,6 +166,9 @@ export default function AuthFormScreen() {
               <View
                 style={[
                   styles.checkbox,
+                  {
+                    borderColor: isDark ? colors.border.light : "#d1d5db",
+                  },
                   acceptedTerms && styles.checkboxChecked,
                   showTermsError && !acceptedTerms && styles.checkboxError,
                 ]}
@@ -154,6 +180,7 @@ export default function AuthFormScreen() {
               <Text
                 style={[
                   styles.termsText,
+                  { color: colors.text.secondary },
                   showTermsError && !acceptedTerms && styles.termsTextError,
                 ]}
               >
@@ -173,7 +200,6 @@ export default function AuthFormScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f9fafb",
   },
   scrollContent: {
     flexGrow: 1,
@@ -187,27 +213,16 @@ const styles = StyleSheet.create({
   logo: {
     fontSize: 32,
     fontWeight: "bold",
-    color: "#6366f1",
   },
   card: {
-    backgroundColor: "white",
     borderRadius: 20,
     padding: 24,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
   },
   title: {
     fontSize: 20,
     fontWeight: "bold",
     textAlign: "center",
     marginBottom: 24,
-    color: "#111827",
   },
   socialContainer: {
     flexDirection: "row",
@@ -223,9 +238,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     padding: 15,
     borderRadius: 100,
-    borderColor: "#e5e7eb",
     minHeight: 50,
-    backgroundColor: "white",
   },
   socialButtonDefault: {
   },
@@ -248,18 +261,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "#e5e7eb",
     borderRadius: 12,
-    backgroundColor: "#ffffff",
     overflow: "hidden",
     marginBottom: 16,
   },
   countryCode: {
     paddingHorizontal: 16,
     paddingVertical: 18,
-    backgroundColor: "#f9fafb",
     borderRightWidth: 1,
-    borderRightColor: "#e5e7eb",
   },
   flag: {
     fontSize: 20,
@@ -269,26 +278,15 @@ const styles = StyleSheet.create({
     height: 56,
     paddingHorizontal: 16,
     fontSize: 16,
-    color: "#111827",
   },
   button: {
     height: 56,
-    backgroundColor: "#6366f1",
     borderRadius: 12,
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 16,
-    shadowColor: "#6366f1",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 3,
   },
   buttonDisabled: {
-    backgroundColor: "#9ca3af",
     opacity: 0.7,
   },
   buttonText: {
@@ -306,7 +304,6 @@ const styles = StyleSheet.create({
     height: 20,
     borderRadius: 4,
     borderWidth: 2,
-    borderColor: "#d1d5db",
     justifyContent: "center",
     alignItems: "center",
   },
@@ -320,7 +317,6 @@ const styles = StyleSheet.create({
   },
   termsText: {
     fontSize: 14,
-    color: "#6b7280",
     flex: 1,
   },
   termsTextError: {

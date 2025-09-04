@@ -1,4 +1,5 @@
 import { CustomLogoComponent } from "@/shared/assets/logos/settings/CustomLogoComponent";
+import { useTheme } from "@/shared/configs/context/ThemeContext";
 import { hidePhoneNumber } from "@/shared/util/phone-formatter";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
@@ -25,6 +26,7 @@ interface OtpScreenProps {
 
 export default function OtpScreen({ phoneNumber, selectedAuthMethod }: OtpScreenProps) {
   const { t } = useTranslation();
+  const { colors, isDark } = useTheme();
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [isLoading, setIsLoading] = useState(false);
   const [isResending, setIsResending] = useState(false);
@@ -117,23 +119,36 @@ export default function OtpScreen({ phoneNumber, selectedAuthMethod }: OtpScreen
   }, []);
 
   return (
-    <SafeAreaScreenComponent>
-      <StatusBar barStyle="dark-content" backgroundColor="white" />
-      <View style={styles.container}>
+    <SafeAreaScreenComponent backgroundColor={colors.background.primary}>
+      <StatusBar
+        barStyle={isDark ? "light-content" : "dark-content"}
+        backgroundColor={colors.background.primary}
+      />
+      <View style={[styles.container, { backgroundColor: colors.background.primary }]}>
         <View style={styles.content}>
           {/* Logo */}
           <View style={styles.logoContainer}>
-            <CustomLogoComponent name="light" width={170} height={45} />
+            <CustomLogoComponent name={isDark ? "dark" : "light"} width={170} height={45} />
           </View>
 
           {/* Main Card */}
-          <View style={styles.card}>
+          <View style={[
+            styles.card,
+            {
+              backgroundColor: colors.background.card,
+              shadowColor: isDark ? "transparent" : "#000",
+              shadowOffset: isDark ? { width: 0, height: 0 } : { width: 0, height: 2 },
+              shadowOpacity: isDark ? 0 : 0.1,
+              shadowRadius: isDark ? 0 : 8,
+              elevation: isDark ? 0 : 4,
+            }
+          ]}>
             {/* Back Button */}
             <TouchableOpacity style={styles.backButton} onPress={handleGoBack}>
-              <Ionicons name="chevron-back" size={24} color="#111827" />
+              <Ionicons name="chevron-back" size={24} color={colors.text.primary} />
             </TouchableOpacity>
 
-            <Text style={styles.title}>
+            <Text style={[styles.title, { color: colors.text.primary }]}>
               {t("auth:otpSentTo", { phoneNumber: hidePhoneNumber(phoneNumber) })}
             </Text>
 
@@ -147,7 +162,18 @@ export default function OtpScreen({ phoneNumber, selectedAuthMethod }: OtpScreen
                   }}
                   style={[
                     styles.otpInput,
-                    digit ? styles.otpInputFilled : null,
+                    {
+                      backgroundColor: colors.background.card,
+                      borderColor: isDark ? colors.border.light : "#e5e7eb",
+                      color: colors.text.primary,
+                    },
+                    digit ? [
+                      styles.otpInputFilled,
+                      {
+                        borderColor: colors.primary[500],
+                        backgroundColor: isDark ? colors.background.secondary : "#f0f8ff",
+                      }
+                    ] : null,
                   ]}
                   value={digit}
                   onChangeText={(value) => handleOtpChange(value, index)}
@@ -158,6 +184,7 @@ export default function OtpScreen({ phoneNumber, selectedAuthMethod }: OtpScreen
                   maxLength={1}
                   selectTextOnFocus
                   placeholder="-"
+                  placeholderTextColor={colors.text.tertiary}
                   editable={!isLoading && !isResending}
                 />
               ))}
@@ -166,8 +193,8 @@ export default function OtpScreen({ phoneNumber, selectedAuthMethod }: OtpScreen
             {/* Loading indicator when auto-submitting */}
             {isLoading && (
               <View style={styles.loadingContainer}>
-                <ActivityIndicator size="large" color="#6366f1" />
-                <Text style={styles.loadingText}>
+                <ActivityIndicator size="large" color={colors.primary[500]} />
+                <Text style={[styles.loadingText, { color: colors.primary[500] }]}>
                   {t("auth:verifyingCode")}
                 </Text>
               </View>
@@ -186,7 +213,7 @@ export default function OtpScreen({ phoneNumber, selectedAuthMethod }: OtpScreen
             {/* Countdown and Resend */}
             <View style={styles.resendContainer}>
               {countdown > 0 ? (
-                <Text style={styles.countdown}>
+                <Text style={[styles.countdown, { color: colors.text.tertiary }]}>
                   {t("auth:requestNewCode")}{" "}
                   {String(Math.floor(countdown / 60)).padStart(2, "0")}:
                   {String(countdown % 60).padStart(2, "0")}
@@ -197,7 +224,7 @@ export default function OtpScreen({ phoneNumber, selectedAuthMethod }: OtpScreen
                   disabled={isResending}
                   style={styles.resendButton}
                 >
-                  <Text style={styles.resendButtonText}>
+                  <Text style={[styles.resendButtonText, { color: colors.primary[500] }]}>
                     {t("auth:resendCode")}
                   </Text>
                 </TouchableOpacity>
@@ -213,7 +240,6 @@ export default function OtpScreen({ phoneNumber, selectedAuthMethod }: OtpScreen
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f9fafb",
   },
   content: {
     flex: 1,
@@ -227,20 +253,10 @@ const styles = StyleSheet.create({
   logo: {
     fontSize: 32,
     fontWeight: "bold",
-    color: "#6366f1",
   },
   card: {
-    backgroundColor: "white",
     borderRadius: 20,
     padding: 24,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
     position: "relative",
   },
   backButton: {
@@ -255,13 +271,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 40,
     marginTop: 20,
-    color: "#111827",
     lineHeight: 24,
   },
   phoneNumber: {
     fontSize: 16,
     fontWeight: "500",
-    color: "#6366f1",
   },
   otpContainer: {
     flexDirection: "row",
@@ -273,24 +287,18 @@ const styles = StyleSheet.create({
     width: 45,
     height: 56,
     borderWidth: 1,
-    borderColor: "#e5e7eb",
     borderRadius: 12,
-    backgroundColor: "#ffffff",
     textAlign: "center",
     fontSize: 24,
     fontWeight: "600",
-    color: "#111827",
   },
   otpInputFilled: {
-    borderColor: "#6366f1",
-    backgroundColor: "#f0f8ff",
   },
   resendContainer: {
     alignItems: "center",
   },
   countdown: {
     fontSize: 14,
-    color: "#9ca3af",
     textAlign: "center",
   },
   resendButton: {
@@ -299,7 +307,6 @@ const styles = StyleSheet.create({
   },
   resendButtonText: {
     fontSize: 14,
-    color: "#6366f1",
     fontWeight: "600",
     textAlign: "center",
   },
@@ -309,7 +316,6 @@ const styles = StyleSheet.create({
   },
   loadingText: {
     fontSize: 14,
-    color: "#6366f1",
     marginTop: 8,
   },
 });

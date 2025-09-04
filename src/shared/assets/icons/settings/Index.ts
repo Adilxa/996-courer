@@ -23,3 +23,4 @@ export { default as OnVehicle } from "../onVehicale.svg";
 
 export { default as GeoPoint } from "../geoPoint.svg";
 
+export { default as Logo } from "../logo.svg";

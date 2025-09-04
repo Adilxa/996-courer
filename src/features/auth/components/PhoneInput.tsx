@@ -1,3 +1,4 @@
+import { useTheme } from "@/shared/configs/context/ThemeContext";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, TextInput, View } from "react-native";
@@ -26,6 +27,7 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({
   setCountryCode
 }) => {
   const { t } = useTranslation();
+  const { colors, isDark } = useTheme();
   const [selectedCountry, setSelectedCountry] =
     useState<Country>(defaultCountry);
 
@@ -67,19 +69,26 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>{t("auth:phoneNumber")}</Text>
-      <View style={[styles.inputContainer, error && styles.inputError]}>
+      <Text style={[styles.label, { color: colors.text.primary }]}>{t("auth:phoneNumber")}</Text>
+      <View style={[
+        styles.inputContainer,
+        {
+          backgroundColor: colors.background.card,
+          borderColor: isDark ? colors.border.light : "#e5e7eb",
+        },
+        error && styles.inputError
+      ]}>
         <CountrySelector
           selectedCountry={selectedCountry}
           onCountrySelect={handleCountrySelect}
         />
-        <View style={styles.separator} />
+        <View style={[styles.separator, { backgroundColor: isDark ? colors.border.light : "#e5e7eb" }]} />
         <TextInput
-          style={styles.input}
+          style={[styles.input, { color: colors.text.primary }]}
           value={value}
           onChangeText={handleTextChange}
           placeholder={placeholder || getPlaceholder()}
-          placeholderTextColor="#9ca3af"
+          placeholderTextColor={colors.text.tertiary}
           keyboardType="numeric"
           maxLength={selectedCountry.mask.length}
           autoComplete="tel"
@@ -100,16 +109,13 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     fontWeight: "500",
-    color: "#374151",
     marginBottom: 8,
   },
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "white",
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: "#e5e7eb",
   },
   inputError: {
     borderColor: "#ef4444",
@@ -117,7 +123,6 @@ const styles = StyleSheet.create({
   separator: {
     width: 1,
     height: 40,
-    backgroundColor: "#e5e7eb",
     marginHorizontal: 8,
   },
   input: {
@@ -125,7 +130,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 16,
     fontSize: 16,
-    color: "#111827",
   },
   errorText: {
     fontSize: 14,

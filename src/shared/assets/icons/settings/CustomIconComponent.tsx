@@ -11,6 +11,7 @@ import {
   GeoPoint,
   Home,
   List,
+  Logo,
   OnBicycle,
   OnCar,
   OnFoot,
@@ -20,7 +21,7 @@ import {
   TelegramIcon,
   Time,
   Wallet,
-  WhatsAppIcon,
+  WhatsAppIcon
 } from "./Index";
 
 interface CustomIconComponentProps {
@@ -28,6 +29,8 @@ interface CustomIconComponentProps {
   size?: number;
   color?: string;
   style?: ViewStyle;
+  width?: number;
+  height?: number;
 }
 
 const svgIconMap = {
@@ -48,6 +51,7 @@ const svgIconMap = {
   onBicycle: OnBicycle,
   onCar: OnCar,
   geoPoint: GeoPoint,
+  logo: Logo,
   // Fallback icons that will use Ionicons
   notification: null,
   menu: null,
@@ -70,6 +74,8 @@ export const CustomIconComponent: React.FC<CustomIconComponentProps> = ({
   size = 24,
   color = "#000",
   style,
+  width,
+  height,
 }) => {
   const SvgComponent = svgIconMap[name as keyof typeof svgIconMap];
 
@@ -102,7 +108,7 @@ export const CustomIconComponent: React.FC<CustomIconComponentProps> = ({
   return (
     <View style={[styles.container, style]}>
       {SvgComponent ? (
-        <SvgComponent width={size} height={size} fill={color} color={color} />
+        <SvgComponent width={width ?? size} height={height ?? size} fill={color} color={color} />
       ) : ionIconMap[name] ? (
         <Ionicons name={ionIconMap[name] as any} size={size} fill={color} color={color} />
       ) : (

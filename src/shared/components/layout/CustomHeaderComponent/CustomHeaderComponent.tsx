@@ -1,12 +1,12 @@
+import { CustomIconComponent } from "@/shared/assets/icons/settings/CustomIconComponent";
 import { useTheme } from "@/shared/configs/context/ThemeContext";
 import { Feather } from "@expo/vector-icons";
 import React from "react";
 import {
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
-  ViewStyle,
+  ViewStyle
 } from "react-native";
 
 interface CustomHeaderComponentProps {
@@ -34,11 +34,12 @@ export const CustomHeaderComponent: React.FC<CustomHeaderComponentProps> = ({
       ]}
     >
       {/* Logo text on the left */}
-      <View style={styles.logoContainer}>
+      {/* <View style={styles.logoContainer}>
         <Text style={[styles.logoText, { color: colors.primary[500] }]}>
           996<Text style={[styles.dotText, { color: "#ec4899" }]}>.kg</Text>
         </Text>
-      </View>
+      </View> */}
+      <CustomIconComponent name="logo" color={colors.primary[500]} width={100} height={40} />
 
       {/* Icons on the right */}
       <View style={styles.headerIcons}>

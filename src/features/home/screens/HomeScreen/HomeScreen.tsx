@@ -510,6 +510,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#e0e7ff",
     justifyContent: "center",
     alignItems: "center",
+    borderWidth: 1,
+    borderColor: "gray",
   },
   userAvatarText: {
     fontSize: 28,

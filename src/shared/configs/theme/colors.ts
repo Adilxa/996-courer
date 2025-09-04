@@ -139,7 +139,7 @@ export const Colors = {
 export const DarkColors = {
   ...Colors,
   background: {
-    primary: '#1A1A1A',
+    primary: '#111218',
     secondary: '#1f2937',
     tertiary: '#374151',
     dark: '#000000',
@@ -152,7 +152,7 @@ export const DarkColors = {
     inverse: '#111827',
     disabled: '#6b7280',
   },
-  darkBorder: '#1A1A1A',
+  darkBorder: '#111218',
 };
 
 // Helper function to get colors based on theme

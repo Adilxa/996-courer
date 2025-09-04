@@ -1,3 +1,4 @@
+import { useTheme } from "@/shared/configs/context/ThemeContext";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -39,6 +40,7 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
   selectedCountry,
   onCountrySelect,
 }) => {
+  const { colors, isDark } = useTheme();
   const [isVisible, setIsVisible] = useState(false);
 
   const handleCountrySelect = (country: Country) => {
@@ -53,10 +55,10 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
     >
       <Text style={styles.flag}>{item.flag}</Text>
       <View style={styles.countryInfo}>
-        <Text style={styles.dialCode}>{item.dialCode}</Text>
+        <Text style={[styles.dialCode, { color: colors.text.primary }]}>{item.dialCode}</Text>
       </View>
       {selectedCountry.code === item.code && (
-        <Ionicons name="checkmark" size={20} color="#6366f1" />
+        <Ionicons name="checkmark" size={20} color={colors.primary[500]} />
       )}
     </TouchableOpacity>
   );
@@ -64,29 +66,55 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        style={styles.selector}
+        style={[
+          styles.selector,
+          {
+            backgroundColor: colors.background.card,
+          }
+        ]}
         onPress={() => setIsVisible(!isVisible)}
       >
         <Text style={styles.flag}>{selectedCountry.flag}</Text>
-        <Text style={styles.dialCode}>{selectedCountry.dialCode}</Text>
-        <Ionicons name="chevron-down" size={16} color="#9ca3af" />
+        <Text style={[styles.dialCode, { color: colors.text.primary }]}>{selectedCountry.dialCode}</Text>
+        <Ionicons name="chevron-down" size={16} color={colors.text.tertiary} />
       </TouchableOpacity>
 
       {isVisible && (
-        <View style={styles.dropdown}>
-          {countries.map((country) => (
+        <View style={[
+          styles.dropdown,
+          {
+            backgroundColor: colors.background.card,
+            borderColor: isDark ? colors.border.light : "#e5e7eb",
+            shadowColor: isDark ? "transparent" : "#000",
+            shadowOffset: isDark ? { width: 0, height: 0 } : { width: 0, height: 4 },
+            shadowOpacity: isDark ? 0 : 0.1,
+            shadowRadius: isDark ? 0 : 8,
+            elevation: isDark ? 0 : 8,
+          }
+        ]}>
+          {countries.map((country, index) => (
             <TouchableOpacity
               key={country.code}
               style={[
                 styles.countryItem,
-                selectedCountry.code === country.code && styles.selectedItem,
+                {
+                  borderBottomColor: isDark ? colors.border.light : "#f3f4f6",
+                  borderTopLeftRadius: index === 0 ? 12 : 0,
+                  borderTopRightRadius: index === 0 ? 12 : 0,
+                  borderBottomLeftRadius: index === countries.length - 1 ? 12 : 0,
+                  borderBottomRightRadius: index === countries.length - 1 ? 12 : 0,
+                },
+                selectedCountry.code === country.code && [
+                  styles.selectedItem,
+                  { backgroundColor: isDark ? colors.background.secondary : "#f0f8ff" }
+                ],
               ]}
               onPress={() => handleCountrySelect(country)}
             >
               <Text style={styles.flag}>{country.flag}</Text>
 
               {selectedCountry.code === country.code && (
-                <Ionicons name="checkmark" size={20} color="#6366f1" />
+                <Ionicons name="checkmark" size={20} color={colors.primary[500]} />
               )}
             </TouchableOpacity>
           ))}
@@ -102,7 +130,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 12,
     paddingVertical: 16,
-    backgroundColor: "white",
     borderRadius: 12,
     minWidth: 120,
   },
@@ -112,7 +139,6 @@ const styles = StyleSheet.create({
   },
   dialCode: {
     fontSize: 16,
-    color: "#374151",
     marginRight: 4,
     flex: 1,
   },
@@ -125,27 +151,18 @@ const styles = StyleSheet.create({
     top: "100%",
     left: 0,
     right: 0,
-    backgroundColor: "white",
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: "#e5e7eb",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 8,
     zIndex: 1001,
     marginTop: 4,
   },
   selectedItem: {
-    backgroundColor: "#f0f8ff",
   },
   countryItem: {
     flexDirection: "row",
     alignItems: "center",
     padding: 16,
     borderBottomWidth: 1,
-    borderBottomColor: "#f3f4f6",
   },
   countryInfo: {
     flex: 1,
@@ -153,7 +170,6 @@ const styles = StyleSheet.create({
   },
   countryName: {
     fontSize: 16,
-    color: "#111827",
     marginBottom: 2,
   },
 });
