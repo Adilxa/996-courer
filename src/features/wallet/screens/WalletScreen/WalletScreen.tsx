@@ -11,7 +11,6 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   ActivityIndicator,
-  SafeAreaView,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -19,6 +18,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import MoneyWithdrawalBottomSheet from "../../components/ButtomSheets/MoneyWithdrawalBottomSheet";
 import SecurityDepositBottomSheet from "../../components/ButtomSheets/SecurityDepositBottomSheet";
 import { CalendarModal, DateRange } from "../../components/DatePicker/DatePIcker";
@@ -536,7 +536,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 16,
     alignItems: "center",
-    marginBottom: 20,
+    marginBottom: 50,
   },
   applyButtonText: {
     color: "white",

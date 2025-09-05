@@ -80,7 +80,12 @@ const Statuses = ({ statuses, setStatuses }: StatusesProps) => {
                                     <Text
                                         style={[
                                             styles.tabText,
-                                            { color: colors.text.secondary }
+                                            // { color: isDark ? colors.text.primary : colors.text.secondary }
+                                            {
+                                                color: isActive
+                                                    ? (isDark ? colors.text.totalWhite : colors.text.inverse)
+                                                    : (isDark ? colors.text.primary : colors.text.secondary)
+                                            }
                                         ]}
                                     >
                                         {t(tab)}

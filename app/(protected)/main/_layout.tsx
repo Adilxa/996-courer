@@ -2,7 +2,7 @@ import { CustomIconComponent } from "@/shared/assets/icons/settings/CustomIconCo
 import { useTheme } from "@/shared/configs/context/ThemeContext";
 import { Entypo, Feather, Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
-import { View } from "react-native";
+import { Platform, View } from "react-native";
 
 export default function TabLayout() {
   const { colors, isDark } = useTheme();
@@ -17,7 +17,7 @@ export default function TabLayout() {
           backgroundColor: colors.background.primary,
           borderTopColor: isDark ? colors.darkBorder : colors.border.light,
           borderTopWidth: 1,
-          height: 90,
+          height: Platform.OS === "android" ? 65 : 90,
           paddingBottom: 8,
           paddingTop: 8,
         },

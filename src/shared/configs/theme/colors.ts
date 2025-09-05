@@ -109,6 +109,7 @@ export const Colors = {
     tertiary: '#9ca3af',
     inverse: '#ffffff',
     disabled: '#d1d5db',
+    totalWhite: '#ffffff',
   },
 
   border: {
@@ -151,6 +152,7 @@ export const DarkColors = {
     tertiary: '#9ca3af',
     inverse: '#111827',
     disabled: '#6b7280',
+    totalWhite: '#ffffff',
   },
   darkBorder: '#111218',
 };

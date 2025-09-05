@@ -1,12 +1,12 @@
 import React from "react";
 import {
   Platform,
-  SafeAreaView,
   StatusBar,
   StyleSheet,
   View,
   ViewStyle,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 interface SafeAreaScreenComponentProps {
   children: React.ReactNode;
