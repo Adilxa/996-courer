@@ -232,7 +232,7 @@ export const logout = async (): Promise<void> => {
         console.error('Error during logout:', error);
     }
 };
-
+                
 export default $api;
 
 
